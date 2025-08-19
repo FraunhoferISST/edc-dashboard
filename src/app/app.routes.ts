@@ -13,6 +13,7 @@
  */
 
 import { Routes } from '@angular/router';
+import { PolicyEditorComponent } from './cx-policy/components/policy-editor/policy-editor.component';
 
 export const routes: Routes = [
   {
@@ -49,5 +50,9 @@ export const routes: Routes = [
   {
     path: 'transfer-history',
     loadComponent: () => import('@eclipse-edc/dashboard-core/transfer').then(m => m.TransferHistoryViewComponent),
+  },
+  {
+    path: 'policy-editor',
+    component: PolicyEditorComponent,
   },
 ];

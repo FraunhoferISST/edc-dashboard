@@ -43,7 +43,14 @@
       "text": "Transfer History",
       "materialSymbol": "schedule_send",
       "routerPath": "transfer-history",
-      "viewDescription": "The transfer history view lets you browse and deprovision finished and ongoing transfer processes. You can switch between providing and consuming transfer processes of the selected connector."
+      "viewDescription": "The transfer history view lets you browse and deprovision finished and ongoing transfer processes. You can switch between providing and consuming transfer processes of the selected connector.",
+      "divider": true
+    },
+    {
+      "text": "Policy Editor",
+      "materialSymbol": "edit",
+      "routerPath": "policy-editor",
+      "viewDescription": "Catena-X ODRL Policy Editor"
     }
   ]
 }
