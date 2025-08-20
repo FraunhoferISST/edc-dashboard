@@ -19,11 +19,9 @@
   -->
 
 <div class="grid gap-4 grid-cols-1 xl:grid-cols-3 xl:grid-rows-[auto_1fr] h-full">
-  <div class="flex justify-center items-center xl:col-span-2 xl:row-span-1 bg-base-300">
-    <label class="form-control w-64">
-      <div class="label">
-        <span class="label-text">Select policy</span>
-      </div>
+  <div class="flex justify-center items-center xl:col-span-2 xl:row-span-1 bg-base-300 rounded-2xl shadow-xl p-4">
+    <label class="select w-full">
+      <span class="label">Select Policy Template</span>
       <select
         class="select select-bordered w-full"
         [(ngModel)]="policyConfig"
@@ -35,18 +33,21 @@
       </select>
     </label>
 
-    <button class="btn btn-circle btn-primary" title="Create new policy" (click)="addPolicy()">
-      <span class="material-symbols-rounded">add</span>
-    </button>
-    <button class="btn btn-circle btn-primary" title="Copy the selected policy" (click)="copyPolicy()">
-      <span class="material-symbols-rounded">content_copy</span>
-    </button>
+    <!--    <button class="btn btn-circle btn-primary" title="Create new policy" (click)="addPolicy()">-->
+    <!--      <span class="material-symbols-rounded">add</span>-->
+    <!--    </button>-->
+    <!--    <button class="btn btn-circle btn-primary" title="Copy the selected policy" (click)="copyPolicy()">-->
+    <!--      <span class="material-symbols-rounded">content_copy</span>-->
+    <!--    </button>-->
   </div>
 
-  <div class="xl:col-span-2 xl:row-span-1 bg-base-300">
+  <div class="xl:col-span-2 xl:row-span-1 bg-base-300 rounded-2xl shadow-xl p-4">
     <app-policy-builder (policyChange)="onConfigChange($event)" [policyConfig]="policyConfig"></app-policy-builder>
   </div>
-  <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 bg-base-300">
-    <div>test</div>
+
+  <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 mockup-code overflow-y-auto rounded-2xl shadow-xl">
+    <ng-container *ngFor="let line of text.split('\n'); let i = index">
+      <pre [attr.data-prefix]="i + 1"><code>{{ line }}</code></pre>
+    </ng-container>
   </div>
 </div>
