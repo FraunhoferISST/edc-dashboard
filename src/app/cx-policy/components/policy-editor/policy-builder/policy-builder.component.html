@@ -18,32 +18,16 @@
   SPDX-License-Identifier: Apache-2.0
   -->
 
-<div class="policy-builder-container space-y-4">
-  <!-- Policy Name Input -->
-  <div>
-    <label class="form-control w-full">
-      <div class="label">
-        <span class="label-text">Policy Name</span>
-      </div>
-      <input
-        type="text"
-        placeholder="My Policy"
-        class="input input-bordered w-full"
-        [(ngModel)]="policyConfig.name"
-      />
-    </label>
-  </div>
+<div class="policy-builder-container">
+  <label class="input w-full">
+    <span class="label">Policy Name</span>
+    <input type="text" placeholder="My Policy" [(ngModel)]="policyConfig.name" />
+  </label>
 
   <!-- Accordion for Permissions -->
   <div class="collapse collapse-arrow w-full" [class.collapse-open]="panelOpenState">
-    <input
-      type="checkbox"
-      class="peer"
-      [(ngModel)]="panelOpenState"
-    />
-    <div class="collapse-title text-xl font-medium">
-      Permission
-    </div>
+    <input type="checkbox" class="peer" [(ngModel)]="panelOpenState" />
+    <div class="collapse-title text-xl font-medium">Permission</div>
     <div class="collapse-content">
       <div class="flex flex-row justify-between">
         <!-- Permissions List -->
@@ -70,20 +54,8 @@
       </div>
       <!-- Action Buttons -->
       <div class="flex gap-2 mt-4">
-        <button
-          class="btn btn-primary"
-          (click)="removePermission()"
-          title="Remove selected permission"
-        >
-          Remove
-        </button>
-        <button
-          class="btn btn-primary"
-          (click)="addPermission()"
-          title="Add permission"
-        >
-          Add
-        </button>
+        <button class="btn btn-primary" (click)="removePermission()" title="Remove selected permission">Remove</button>
+        <button class="btn btn-primary" (click)="addPermission()" title="Add permission">Add</button>
       </div>
     </div>
   </div>
