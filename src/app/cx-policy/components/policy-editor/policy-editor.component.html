@@ -45,7 +45,7 @@
     <app-policy-builder (policyChange)="onConfigChange($event)" [policyConfig]="policyConfig"></app-policy-builder>
   </div>
 
-  <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 mockup-code overflow-y-auto rounded-2xl shadow-xl">
+  <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 mockup-code overflow-auto rounded-2xl shadow-xl">
     <ng-container *ngFor="let line of text.split('\n'); let i = index">
       <pre [attr.data-prefix]="i + 1"><code>{{ line }}</code></pre>
     </ng-container>
