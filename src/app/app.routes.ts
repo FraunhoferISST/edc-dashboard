@@ -52,7 +52,7 @@ export const routes: Routes = [
     loadComponent: () => import('@eclipse-edc/dashboard-core/transfer').then(m => m.TransferHistoryViewComponent),
   },
   {
-    path: 'policy-editor',
+    path: 'policy-builder',
     component: PolicyEditorComponent,
   },
 ];

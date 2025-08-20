@@ -18,8 +18,8 @@
   SPDX-License-Identifier: Apache-2.0
   -->
 
-<div class="policy-editor-container space-y-6">
-  <div class="flex justify-center items-center gap-3">
+<div class="grid gap-4 grid-cols-1 xl:grid-cols-3 xl:grid-rows-[auto_1fr] h-full">
+  <div class="flex justify-center items-center xl:col-span-2 xl:row-span-1 bg-base-300">
     <label class="form-control w-64">
       <div class="label">
         <span class="label-text">Select policy</span>
@@ -43,12 +43,10 @@
     </button>
   </div>
 
-  <div class="flex flex-row policy-split-container gap-4">
-    <div class="policy-card-container w-3/5">
-      <app-policy-builder (policyChange)="onConfigChange($event)" [policyConfig]="policyConfig"></app-policy-builder>
-    </div>
-    <div class="policy-card-container w-2/5">
-      <!-- Optional: Weitere Inhalte -->
-    </div>
+  <div class="xl:col-span-2 xl:row-span-1 bg-base-300">
+    <app-policy-builder (policyChange)="onConfigChange($event)" [policyConfig]="policyConfig"></app-policy-builder>
+  </div>
+  <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 bg-base-300">
+    <div>test</div>
   </div>
 </div>

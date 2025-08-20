@@ -47,10 +47,10 @@
       "divider": true
     },
     {
-      "text": "Policy Editor",
-      "materialSymbol": "edit",
-      "routerPath": "policy-editor",
-      "viewDescription": "Catena-X ODRL Policy Editor"
+      "text": "Policy Builder",
+      "materialSymbol": "build",
+      "routerPath": "policy-builder",
+      "viewDescription": "Catena-X ODRL Policy Builder"
     }
   ]
 }
