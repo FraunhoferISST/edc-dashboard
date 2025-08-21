@@ -26,18 +26,16 @@ import {
   LogicalConstraint,
   Permission,
 } from '../../../../models/policy';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ConstraintDialogComponent } from './dialog/constraint-dialog/constraint-dialog.component';
-import { LogicalConstraintDialogComponent } from './dialog/logical-dialog/logical-dialog.component';
 import { PolicyService } from '../../../../services/policy.service';
-import { ConstraintListComponent } from '../constraint/constraint.list.component';
+import { ModalAndAlertService } from '@eclipse-edc/dashboard-core';
+import { ConstraintDialogComponent } from './dialog/constraint-dialog/constraint-dialog.component';
 
 @Component({
   selector: 'app-permission',
   templateUrl: './permission.component.html',
   standalone: true,
-  imports: [NgFor, FormsModule, ConstraintListComponent],
+  imports: [FormsModule],
 })
 export class PermissionComponent {
   @Input() permission!: Permission;
@@ -48,43 +46,69 @@ export class PermissionComponent {
 
   @Input() constraints: ConstraintTemplate[] = [];
 
-  constructor(policyService: PolicyService) {
+  constructor(
+    policyService: PolicyService,
+    readonly modalService: ModalAndAlertService,
+  ) {
     this.actions = policyService.actions();
     this.constraints = policyService.constraintTemplates();
   }
 
-  onConstraintChange() {
-    this.permissionChange.emit();
+  getConstraintType(constraint: Constraint): 'atomic' | 'logical' {
+    return constraint instanceof AtomicConstraint ? 'atomic' : 'logical';
   }
 
-  onConstraintEdit(constraint: Constraint) {
-    // this.editConstraint(constraint);
+  getAtomicConstraints() {
+    return this.constraints.filter(c => !c.multiple);
   }
 
-  // editConstraint(constraint: Constraint) {
-  //   const onResult = (result: Constraint) => {
-  //     const idx = this.permission.constraints.indexOf(constraint);
-  //     if (result != null && idx != -1) {
-  //       this.permission.constraints[idx] = result;
-  //       this.permissionChange.emit();
-  //     }
-  //   };
-  //   if (constraint instanceof AtomicConstraint) {
-  //     const dialogRef = this.dialog.open(ConstraintDialogComponent, {
-  //       data: constraint,
-  //       minWidth: '400px',
-  //     });
-  //
-  //     dialogRef.afterClosed().subscribe(onResult);
-  //   } else if (constraint instanceof LogicalConstraint) {
-  //     const dialogRef = this.dialog.open(LogicalConstraintDialogComponent, {
-  //       data: {
-  //         constraint: constraint,
-  //         constraints: this.constraints.filter(c => !c.multiple),
-  //       },
-  //       minWidth: '600px',
-  //     });
-  //     dialogRef.afterClosed().subscribe(onResult);
-  //   }
-  // }
+  addConstraint(constraint: Constraint) {
+    this.editConstraint(constraint, true);
+  }
+
+  deleteConstraint(constraint: Constraint) {
+    this.permission.constraints = this.permission.constraints.filter(x => x !== constraint);
+  }
+
+  editConstraint(constraint: Constraint, addNew = false) {
+    const onResult = (result: Constraint) => {
+      if (result != null) {
+        const idx = this.permission.constraints.indexOf(constraint);
+        if (idx != -1) {
+          this.permission.constraints[idx] = result;
+        } else if (addNew) {
+          this.permission.constraints.push(result);
+        }
+        this.permissionChange.emit();
+      }
+      this.modalService.closeModal();
+    };
+    if (constraint instanceof AtomicConstraint) {
+      this.modalService.openModal(
+        ConstraintDialogComponent,
+        {
+          constraint: constraint,
+        },
+        {
+          canceled: () => this.modalService.closeModal(),
+          save: onResult,
+        },
+      );
+    } else if (constraint instanceof LogicalConstraint) {
+      onResult(constraint);
+      /*this.modalService.openModal(
+        LogicalConstraintDialogComponent,
+        {
+          constraint: constraint,
+          constraints: this.constraints.filter(c => !c.multiple),
+        },
+        {
+          canceled: () => this.modalService.closeModal(),
+          save: onResult,
+        },
+      )*/
+    }
+  }
+
+  protected readonly AtomicConstraint = AtomicConstraint;
 }

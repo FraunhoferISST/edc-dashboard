@@ -18,39 +18,66 @@
   SPDX-License-Identifier: Apache-2.0
   -->
 
-<div class="card h-full bg-base-100 shadow-md">
-  <div class="card-body">
-    <div class="flex flex-col gap-4">
-      <div class="form-control w-full">
-        <label class="label">
-          <span class="label-text">Name</span>
-        </label>
-        <input
-          type="text"
-          placeholder="Permission name"
-          class="input input-bordered w-full"
-          [(ngModel)]="permission.name"
-        />
-      </div>
-      <div class="form-control w-full">
-        <label class="label">
-          <span class="label-text">Action</span>
-        </label>
-        <select class="select select-bordered w-full" [(ngModel)]="permission.action">
-          <option *ngFor="let action of actions" [ngValue]="action">
-            {{ action }}
-          </option>
-        </select>
-      </div>
-
-      <app-constraint-list
-        [container]="permission"
-        [constraints]="constraints"
-        (constraintRemove)="onConstraintChange()"
-        (constraintAdd)="onConstraintChange()"
-        (constraintEdit)="onConstraintEdit($event)"
+<div class="flex flex-col bg-base-100 rounded-2xl p-4 h-full">
+  <div class="w-full flex">
+    <label class="input flex-1">
+      <span class="label">Name</span>
+      <input type="text" placeholder="Permission name" [(ngModel)]="permission.name" />
+    </label>
+    <div class="dropdown dropdown-end ml-4">
+      <button tabindex="0" class="btn btn-soft btn-primary" title="Add constraint">
+        <span class="material-symbols-rounded">add</span>
+        Add Constraint
+      </button>
+      <ul
+        tabindex="0"
+        class="dropdown-content menu shadow-2xl bg-base-300 rounded-2xl flex-nowrap overflow-y-auto max-h-[50vh]"
       >
-      </app-constraint-list>
+        @for (constraint of constraints; track constraint.name) {
+          <li (click)="addConstraint(constraint.factory())">
+            <a class="truncate">{{ constraint.name }}</a>
+          </li>
+        }
+      </ul>
     </div>
+  </div>
+
+  <div class="divider m-0 my-4"><span class="opacity-80">Constraints</span></div>
+
+  <div class="flex flex-col gap-3 mx-4 [&>div]:last:border-none">
+    @for (constraint of permission.constraints; track constraint) {
+      <div class="w-full flex items-center gap-4 border-b-2 border-b-base-content/15 pb-3">
+        <div class="flex flex-col flex-1">
+          <div class="text-xs font-normal opacity-60">
+            {{ constraint.constructor.name.slice(1).replace('Con', ' Con') }}
+          </div>
+          <div class="text-md font-normal">{{ constraint.toString().replace('Constraint ', '') }}</div>
+        </div>
+        @if (getConstraintType(constraint) === 'atomic') {
+          <button class="btn btn-sm btn-square btn-soft btn-info" (click)="editConstraint(constraint)">
+            <span class="material-symbols-rounded !text-[1.2rem]">edit</span>
+          </button>
+        } @else {
+          <div class="dropdown dropdown-top ml-4">
+            <button tabindex="0" class="btn btn-soft btn-square btn-sm btn-primary" title="Add constraint">
+              <span class="material-symbols-rounded">add</span>
+            </button>
+            <ul
+              tabindex="0"
+              class="dropdown-content menu shadow-2xl bg-base-300 rounded-2xl flex-nowrap overflow-y-auto max-h-[30vh] z-10"
+            >
+              @for (atomic of getAtomicConstraints(); track atomic.name) {
+                <li (click)="addConstraint(atomic.factory())">
+                  <a class="truncate">{{ atomic.name }}</a>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+        <button class="btn btn-sm btn-square btn-soft btn-error" (click)="deleteConstraint(constraint)">
+          <span class="material-symbols-rounded !text-[1.2rem]">delete</span>
+        </button>
+      </div>
+    }
   </div>
 </div>

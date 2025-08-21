@@ -20,7 +20,7 @@
 
 import { Component } from '@angular/core';
 import { PolicyBuilderComponent } from './policy-builder/policy-builder.component';
-import { OutputKind, PolicyConfiguration } from '../../models/policy';
+import { Action, OutputKind, PolicyConfiguration } from '../../models/policy';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { FormatService } from '../../services/format.service';
@@ -44,6 +44,7 @@ export class PolicyEditorComponent {
   currentFormat: OutputKind;
 
   configurations: PolicyConfiguration[] = [];
+  policyType: Action = Action.Use;
 
   constructor(
     public formatService: FormatService,
@@ -72,6 +73,11 @@ export class PolicyEditorComponent {
     this.store.store(this.policyConfig);
   }
 
+  onTypeChange() {
+    this.policyConfig.policy.permissions.forEach(x => (x.action = this.policyType));
+    this.updateJsonText(this.policyConfig, this.currentFormat);
+  }
+
   onConfigSelectionChange(cfg: PolicyConfiguration) {
     this.policyConfig = cfg;
     this.updateJsonText(cfg, this.currentFormat);
@@ -84,4 +90,6 @@ export class PolicyEditorComponent {
     const ld = this.formatService.toJsonLd(cfg, format);
     this.text = this.formatService.formatPolicy(ld);
   }
+
+  protected readonly Action = Action;
 }

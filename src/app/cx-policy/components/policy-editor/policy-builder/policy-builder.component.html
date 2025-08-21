@@ -18,65 +18,54 @@
   SPDX-License-Identifier: Apache-2.0
   -->
 
-<div class="flex flex-col h-full overflow-y-auto">
-  <label class="input w-full shrink-0">
-    <span class="label">Policy Name</span>
-    <input type="text" placeholder="My Policy" [(ngModel)]="policyConfig.name" />
-  </label>
+<div class="w-full h-full grid grid-cols-[auto_1fr] gap-4 pb-4">
+  <ul class="menu bg-base-100 rounded-2xl pr-3">
+    <li>
+      <h2 class="menu-title flex justify-between pr-0">
+        <span>Permission(s)</span>
+        <button class="btn btn-primary btn-outline btn-xs btn-soft" (click)="addPermission()" title="Add permission">
+          <span class="material-symbols-rounded !text-[1.2rem]">add</span>
+        </button>
+      </h2>
+      <ul>
+        @for (permission of policyConfig.policy.permissions; track permission.name) {
+          <div class="group flex flex-row justify-between flex-nowrap items-center">
+            <li class="w-40 mr-2" (click)="onPermissionSelectionChange(permission)">
+              <a [class.text-primary]="permission === currentPermission">{{ permission.name }}</a>
+            </li>
+            <button
+              class="btn btn-error btn-outline btn-xs btn-soft invisible group-hover:visible"
+              (click)="removePermission(permission)"
+              title="Delete permission"
+            >
+              <span class="material-symbols-rounded !text-[1.2rem]">delete</span>
+            </button>
+          </div>
+        }
+      </ul>
+    </li>
+    <li>
+      <h2 class="menu-title">Obligation(s)</h2>
+      <ul>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+        <li><a>Item 3</a></li>
+      </ul>
+    </li>
+    <li>
+      <h2 class="menu-title">Prohibition(s)</h2>
+      <ul>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+        <li><a>Item 3</a></li>
+      </ul>
+    </li>
+  </ul>
 
-  <div class="flex flex-1 mt-4">
-    <ul class="menu bg-base-100 rounded-2xl mr-4">
-      <li>
-        <h2 class="menu-title flex justify-between pr-0">
-          <span>Permission(s)</span>
-          <button
-            class="btn btn-primary btn-outline btn-xs btn-circle"
-            (click)="addPermission()"
-            title="Add permission"
-          >
-            <span class="material-symbols-rounded !text-[1.2rem]">add</span>
-          </button>
-        </h2>
-        <ul>
-          @for (permission of policyConfig.policy.permissions; track permission.name) {
-            <div class="group flex flex-row justify-between flex-nowrap items-center">
-              <li class="w-48 mr-2" (click)="onPermissionSelectionChange(permission)">
-                <a [class.text-primary]="permission === currentPermission">{{ permission.name }}</a>
-              </li>
-              <button
-                class="btn btn-error btn-outline btn-xs btn-circle invisible group-hover:visible"
-                (click)="removePermission(permission)"
-                title="Delete permission"
-              >
-                <span class="material-symbols-rounded !text-[.95rem]">delete</span>
-              </button>
-            </div>
-          }
-        </ul>
-      </li>
-      <li>
-        <h2 class="menu-title">Obligation(s)</h2>
-        <ul>
-          <li><a>Item 1</a></li>
-          <li><a>Item 2</a></li>
-          <li><a>Item 3</a></li>
-        </ul>
-      </li>
-      <li>
-        <h2 class="menu-title">Prohibition(s)</h2>
-        <ul>
-          <li><a>Item 1</a></li>
-          <li><a>Item 2</a></li>
-          <li><a>Item 3</a></li>
-        </ul>
-      </li>
-    </ul>
-
-    <app-permission
-      *ngIf="currentPermission"
-      (permissionChange)="onPermissionChange()"
-      [permission]="currentPermission"
-      class="w-full h-full"
-    ></app-permission>
-  </div>
+  <app-permission
+    *ngIf="currentPermission"
+    (permissionChange)="onPermissionChange()"
+    [permission]="currentPermission"
+    class="max-w-full"
+  ></app-permission>
 </div>

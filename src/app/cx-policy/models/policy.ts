@@ -184,6 +184,7 @@ export interface Constraint {
 
 export enum Action {
   Use = 'use',
+  Access = 'access',
 }
 
 export enum Operator {

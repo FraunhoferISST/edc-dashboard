@@ -18,9 +18,9 @@
  * SPDX-License-Identifier: Apache-2.0
  ******************************************************************************/
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AtomicConstraint, LeftOperand, Operator, ValueKind } from '../../../../../../models/policy';
+import { AtomicConstraint, Operator } from '../../../../../../models/policy';
 import { AtomicConstraintComponent } from '../../../constraint/atomic.constraint.component';
 
 @Component({
@@ -30,20 +30,13 @@ import { AtomicConstraintComponent } from '../../../constraint/atomic.constraint
   imports: [FormsModule, AtomicConstraintComponent],
 })
 export class ConstraintDialogComponent {
+  @Input() constraint!: AtomicConstraint;
+  @Output() save = new EventEmitter<AtomicConstraint>();
+  @Output() canceled = new EventEmitter<void>();
+
   operators: string[];
-  constraint: AtomicConstraint = new AtomicConstraint(
-    new LeftOperand('age'), // leftOperand
-    Operator.Gte, // operator: greater than or equal
-    18, // rightOperand: 18
-    ValueKind.Number, // kind: Number
-  );
+
   constructor() {
-    // this.constraint = data.clone();
-
     this.operators = Object.values(Operator).filter(value => typeof value === 'string') as string[];
-  }
-
-  cancel() {
-    // this.dialogRef.close();
   }
 }

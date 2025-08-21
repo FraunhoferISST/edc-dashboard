@@ -19,43 +19,43 @@
  ******************************************************************************/
 
 import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  AtomicConstraint,
-  Constraint,
-  ConstraintTemplate,
-  LogicalConstraint,
-  LogicalOperator,
-} from '../../../../../../models/policy';
+import { AtomicConstraint, Constraint, ConstraintTemplate, LogicalConstraint } from '../../../../../../models/policy';
 import { PolicyService } from '../../../../../../services/policy.service';
-import { ConstraintListComponent } from '../../../constraint/constraint.list.component';
 import { AtomicConstraintComponent } from '../../../constraint/atomic.constraint.component';
 
 @Component({
   selector: 'app-logical-dialog',
   templateUrl: './logical-dialog.component.html',
   standalone: true,
-  imports: [FormsModule, NgFor, ConstraintListComponent, AtomicConstraintComponent],
+  imports: [FormsModule, NgFor, AtomicConstraintComponent],
 })
-export class LogicalConstraintDialogComponent {
+export class LogicalConstraintDialogComponent implements OnChanges {
+  @Input() constraint!: LogicalConstraint;
+  @Input() constraints!: ConstraintTemplate[];
+
+  @Output() save = new EventEmitter<LogicalConstraint>();
+  @Output() canceled = new EventEmitter<void>();
+
   logicalOperators: string[];
   operators: string[];
-  constraint: LogicalConstraint;
-  currentConstraint: AtomicConstraint = new AtomicConstraint();
-  constraints: ConstraintTemplate[] = [];
+  currentConstraint!: AtomicConstraint;
 
   constructor(policyService: PolicyService) {
-    this.constraint = new LogicalConstraint(LogicalOperator.And);
     this.logicalOperators = policyService.logicalOperators();
     this.operators = policyService.operators();
+  }
 
-    const constraints = this.constraint.constraints
-      .filter(c => c instanceof AtomicConstraint)
-      .map(c => c as AtomicConstraint);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['constraint']) {
+      const constraints = this.constraint.constraints
+        .filter(c => c instanceof AtomicConstraint)
+        .map(c => c as AtomicConstraint);
 
-    if (constraints.length > 0) {
-      this.currentConstraint = constraints[0];
+      if (constraints.length > 0) {
+        this.currentConstraint = constraints[0];
+      }
     }
   }
 
@@ -85,8 +85,5 @@ export class LogicalConstraintDialogComponent {
     if (constraint instanceof AtomicConstraint) {
       this.currentConstraint = constraint;
     }
-  }
-  cancel() {
-    // this.dialogRef.close();
   }
 }
