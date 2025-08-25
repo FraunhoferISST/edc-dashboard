@@ -91,5 +91,9 @@ export class PolicyEditorComponent {
     this.text = this.formatService.formatPolicy(ld);
   }
 
+  async copyPolicyToClipboard(): Promise<void> {
+    await navigator.clipboard.writeText(this.text);
+  }
+
   protected readonly Action = Action;
 }

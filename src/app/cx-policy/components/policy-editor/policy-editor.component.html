@@ -55,6 +55,15 @@
   </div>
 
   <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 mockup-code overflow-auto rounded-2xl shadow-xl">
+    <button
+      tabindex="0"
+      class="btn btn-soft btn-primary fixed right-8 bottom-8"
+      title="Copy to clipboard"
+      (click)="copyPolicyToClipboard()"
+    >
+      <span class="material-symbols-rounded">content_copy</span>
+      Copy
+    </button>
     <ng-container *ngFor="let line of text.split('\n'); let i = index">
       <pre [attr.data-prefix]="i + 1"><code>{{ line }}</code></pre>
     </ng-container>
