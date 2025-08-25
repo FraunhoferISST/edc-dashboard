@@ -78,28 +78,30 @@
           <span class="material-symbols-rounded !text-[1.2rem]">delete</span>
         </button>
         @if (getConstraintType(constraint) === 'logical') {
-          @for (subconstraint of getSubConstraints(constraint); track subconstraint) {
-            <div class="w-full px-4 flex gap-4 items-center">
-              <div class="flex flex-col flex-1">
-                <div class="text-xs font-normal opacity-60">
-                  {{ subconstraint.constructor.name.slice(1).replace('Con', ' Con') }}
+          <div class="w-full border-l-base-content/10 border-l-1 ml-2 -mt-3">
+            @for (subconstraint of getSubConstraints(constraint); track subconstraint) {
+              <div class="w-full px-4 flex gap-4 items-center my-2">
+                <div class="flex flex-col flex-1">
+                  <div class="text-xs font-normal opacity-60">
+                    {{ subconstraint.constructor.name.slice(1).replace('Con', ' Con') }}
+                  </div>
+                  <div class="text-md font-normal">{{ subconstraint.toString().replace('Constraint ', '') }}</div>
                 </div>
-                <div class="text-md font-normal">{{ subconstraint.toString().replace('Constraint ', '') }}</div>
+                <button
+                  class="btn btn-sm btn-square btn-soft btn-info"
+                  (click)="editConstraint(subconstraint, false, constraint)"
+                >
+                  <span class="material-symbols-rounded !text-[1.2rem]">edit</span>
+                </button>
+                <button
+                  class="btn btn-sm btn-square btn-soft btn-error"
+                  (click)="deleteConstraint(subconstraint, constraint)"
+                >
+                  <span class="material-symbols-rounded !text-[1.2rem]">delete</span>
+                </button>
               </div>
-              <button
-                class="btn btn-sm btn-square btn-soft btn-info"
-                (click)="editConstraint(subconstraint, false, constraint)"
-              >
-                <span class="material-symbols-rounded !text-[1.2rem]">edit</span>
-              </button>
-              <button
-                class="btn btn-sm btn-square btn-soft btn-error"
-                (click)="deleteConstraint(subconstraint, constraint)"
-              >
-                <span class="material-symbols-rounded !text-[1.2rem]">delete</span>
-              </button>
-            </div>
-          }
+            }
+          </div>
         }
       </div>
     }
