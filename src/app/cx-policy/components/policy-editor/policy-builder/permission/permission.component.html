@@ -46,7 +46,7 @@
 
   <div class="flex flex-col gap-3 mx-4 [&>div]:last:border-none">
     @for (constraint of permission.constraints; track constraint) {
-      <div class="w-full flex items-center gap-4 border-b-2 border-b-base-content/15 pb-3">
+      <div class="w-full flex flex-wrap items-center gap-4 border-b-2 border-b-base-content/15 pb-3">
         <div class="flex flex-col flex-1">
           <div class="text-xs font-normal opacity-60">
             {{ constraint.constructor.name.slice(1).replace('Con', ' Con') }}
@@ -58,16 +58,16 @@
             <span class="material-symbols-rounded !text-[1.2rem]">edit</span>
           </button>
         } @else {
-          <div class="dropdown dropdown-top ml-4">
+          <div class="dropdown dropdown-end ml-4">
             <button tabindex="0" class="btn btn-soft btn-square btn-sm btn-primary" title="Add constraint">
               <span class="material-symbols-rounded">add</span>
             </button>
             <ul
               tabindex="0"
-              class="dropdown-content menu shadow-2xl bg-base-300 rounded-2xl flex-nowrap overflow-y-auto max-h-[30vh] z-10"
+              class="dropdown-content menu shadow-2xl bg-base-300 rounded-2xl flex-nowrap overflow-y-auto"
             >
-              @for (atomic of getAtomicConstraints(); track atomic.name) {
-                <li (click)="addConstraint(atomic.factory())">
+              @for (atomic of getAtomicConstraintTemplates(); track atomic.name) {
+                <li (click)="addConstraint(atomic.factory(), constraint)">
                   <a class="truncate">{{ atomic.name }}</a>
                 </li>
               }
@@ -77,6 +77,30 @@
         <button class="btn btn-sm btn-square btn-soft btn-error" (click)="deleteConstraint(constraint)">
           <span class="material-symbols-rounded !text-[1.2rem]">delete</span>
         </button>
+        @if (getConstraintType(constraint) === 'logical') {
+          @for (subconstraint of getSubConstraints(constraint); track subconstraint) {
+            <div class="w-full px-4 flex gap-4 items-center">
+              <div class="flex flex-col flex-1">
+                <div class="text-xs font-normal opacity-60">
+                  {{ subconstraint.constructor.name.slice(1).replace('Con', ' Con') }}
+                </div>
+                <div class="text-md font-normal">{{ subconstraint.toString().replace('Constraint ', '') }}</div>
+              </div>
+              <button
+                class="btn btn-sm btn-square btn-soft btn-info"
+                (click)="editConstraint(subconstraint, false, constraint)"
+              >
+                <span class="material-symbols-rounded !text-[1.2rem]">edit</span>
+              </button>
+              <button
+                class="btn btn-sm btn-square btn-soft btn-error"
+                (click)="deleteConstraint(subconstraint, constraint)"
+              >
+                <span class="material-symbols-rounded !text-[1.2rem]">delete</span>
+              </button>
+            </div>
+          }
+        }
       </div>
     }
   </div>

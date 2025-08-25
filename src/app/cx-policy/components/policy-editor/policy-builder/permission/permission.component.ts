@@ -58,26 +58,37 @@ export class PermissionComponent {
     return constraint instanceof AtomicConstraint ? 'atomic' : 'logical';
   }
 
-  getAtomicConstraints() {
+  getAtomicConstraintTemplates() {
     return this.constraints.filter(c => !c.multiple);
   }
 
-  addConstraint(constraint: Constraint) {
-    this.editConstraint(constraint, true);
+  getSubConstraints(constraint: Constraint): Constraint[] {
+    return (constraint as LogicalConstraint).constraints;
   }
 
-  deleteConstraint(constraint: Constraint) {
-    this.permission.constraints = this.permission.constraints.filter(x => x !== constraint);
+  addConstraint(constraint: Constraint, parent: undefined | Constraint = undefined) {
+    this.editConstraint(constraint, true, parent);
   }
 
-  editConstraint(constraint: Constraint, addNew = false) {
+  deleteConstraint(constraint: Constraint, parent: undefined | Constraint = undefined) {
+    if (parent) {
+      (parent as LogicalConstraint).constraints = (parent as LogicalConstraint).constraints.filter(
+        x => x !== constraint,
+      );
+    } else {
+      this.permission.constraints = this.permission.constraints.filter(x => x !== constraint);
+    }
+  }
+
+  editConstraint(constraint: Constraint, addNew = false, parent: undefined | Constraint = undefined) {
     const onResult = (result: Constraint) => {
+      const list = parent ? (parent as LogicalConstraint).constraints : this.permission.constraints;
       if (result != null) {
-        const idx = this.permission.constraints.indexOf(constraint);
+        const idx = list.indexOf(constraint);
         if (idx != -1) {
-          this.permission.constraints[idx] = result;
+          list[idx] = result;
         } else if (addNew) {
-          this.permission.constraints.push(result);
+          list.push(result);
         }
         this.permissionChange.emit();
       }
@@ -111,4 +122,5 @@ export class PermissionComponent {
   }
 
   protected readonly AtomicConstraint = AtomicConstraint;
+  protected readonly LogicalConstraint = LogicalConstraint;
 }

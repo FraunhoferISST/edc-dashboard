@@ -64,7 +64,7 @@ export class LogicalConstraint implements Constraint {
   }
 
   toString() {
-    return `${this.operator} constraint: [ ${this.constraints.map(c => c.toString()).join(',')} ]`;
+    return `${this.operator} Constraint`;
   }
 }
 
