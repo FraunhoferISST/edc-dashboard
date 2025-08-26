@@ -21,6 +21,7 @@
 /*eslint-disable @typescript-eslint/no-explicit-any*/
 
 import {
+  Action,
   AtomicConstraint,
   Constraint,
   LogicalConstraint,
@@ -60,6 +61,14 @@ export class PlainFormatter implements JsonLdFormatter {
 
   toJsonLd(policyConfig: PolicyConfiguration): object {
     const permission = policyConfig.policy.permissions.map(this.mapPermission.bind(this));
+    const obligation =
+      policyConfig.policy.type === Action.Use
+        ? policyConfig.policy.obligations.map(this.mapPermission.bind(this))
+        : undefined;
+    const prohibition =
+      policyConfig.policy.type === Action.Use
+        ? policyConfig.policy.prohibitions.map(this.mapPermission.bind(this))
+        : undefined;
     const additionalNamespaces = this.policyService.namespacesFor(policyConfig);
     const additionalContexts = this.policyService.contextsFor(policyConfig);
 
@@ -67,7 +76,7 @@ export class PlainFormatter implements JsonLdFormatter {
 
     return Object.assign(emptyPolicy, {
       '@context': context,
-      policy: { ...policyHeader, permission },
+      policy: { ...policyHeader, permission, obligation, prohibition },
     });
   }
 

@@ -22,18 +22,11 @@
   <div class="flex justify-center items-center xl:col-span-2 xl:row-span-1 bg-base-300 rounded-2xl shadow-xl p-4">
     <label class="select w-full">
       <span class="label">Select Policy Type</span>
-      <select class="select w-full" [(ngModel)]="policyType" (ngModelChange)="onTypeChange()">
+      <select class="select w-full" [(ngModel)]="policyConfig.policy.type" (ngModelChange)="onTypeChange($event)">
         <option [value]="Action.Access">Access Policy</option>
         <option [value]="Action.Use">Usage Policy</option>
       </select>
     </label>
-
-    <!--    <button class="btn btn-circle btn-primary" title="Create new policy" (click)="addPolicy()">-->
-    <!--      <span class="material-symbols-rounded">add</span>-->
-    <!--    </button>-->
-    <!--    <button class="btn btn-circle btn-primary" title="Copy the selected policy" (click)="copyPolicy()">-->
-    <!--      <span class="material-symbols-rounded">content_copy</span>-->
-    <!--    </button>-->
   </div>
 
   <div class="xl:col-span-2 xl:row-span-1 bg-base-300 rounded-2xl shadow-xl overflow-y-auto">

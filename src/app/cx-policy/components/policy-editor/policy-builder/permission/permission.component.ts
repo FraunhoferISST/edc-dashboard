@@ -78,6 +78,7 @@ export class PermissionComponent {
     } else {
       this.permission.constraints = this.permission.constraints.filter(x => x !== constraint);
     }
+    this.permissionChange.emit();
   }
 
   editConstraint(constraint: Constraint, addNew = false, parent: undefined | Constraint = undefined) {

@@ -26,6 +26,7 @@ import { NgFor } from '@angular/common';
 import { FormatService } from '../../services/format.service';
 import { PolicyConfigurationStore } from '../../stores/policy.store';
 import { PolicyService } from '../../services/policy.service';
+import { DeleteConfirmComponent, ModalAndAlertService } from '@eclipse-edc/dashboard-core';
 
 @Component({
   selector: 'app-policy-editor',
@@ -44,12 +45,12 @@ export class PolicyEditorComponent {
   currentFormat: OutputKind;
 
   configurations: PolicyConfiguration[] = [];
-  policyType: Action = Action.Use;
 
   constructor(
     public formatService: FormatService,
     public store: PolicyConfigurationStore,
     public policyService: PolicyService,
+    readonly modalService: ModalAndAlertService,
   ) {
     this.configurations = store.loadConfigurations();
     this.currentFormat = OutputKind.Plain;
@@ -73,9 +74,45 @@ export class PolicyEditorComponent {
     this.store.store(this.policyConfig);
   }
 
-  onTypeChange() {
-    this.policyConfig.policy.permissions.forEach(x => (x.action = this.policyType));
-    this.updateJsonText(this.policyConfig, this.currentFormat);
+  onTypeChange(type: Action) {
+    const updatePolicy = (to: Action) => {
+      this.policyConfig.policy.obligations = [];
+      this.policyConfig.policy.prohibitions = [];
+      this.policyConfig.policy.permissions.forEach(x => (x.action = to));
+      this.updateJsonText(this.policyConfig, this.currentFormat);
+    };
+    if (type === Action.Access) {
+      if (this.policyConfig.policy.obligations.length !== 0 || this.policyConfig.policy.prohibitions.length !== 0) {
+        let isConfirmed = false;
+        const cancelCallback = () => {
+          this.modalService.closeModal();
+          if (!isConfirmed) {
+            this.policyConfig.policy.type = Action.Use;
+          }
+        };
+        this.modalService.openModal(
+          DeleteConfirmComponent,
+          {
+            customText:
+              'Access policies ONLY allow permissions. All existing obligations and prohibitions will be deleted!',
+          },
+          {
+            canceled: cancelCallback,
+            confirm: () => {
+              isConfirmed = true;
+              this.modalService.closeModal();
+              updatePolicy(Action.Access);
+            },
+          },
+          false,
+          cancelCallback,
+        );
+      } else {
+        updatePolicy(Action.Use);
+      }
+    } else {
+      updatePolicy(Action.Use);
+    }
   }
 
   onConfigSelectionChange(cfg: PolicyConfiguration) {

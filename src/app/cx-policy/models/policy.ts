@@ -203,7 +203,10 @@ export interface ConstraintContainer {
 }
 
 export class Policy {
+  type: Action = Action.Use;
   permissions: Permission[] = [];
+  obligations: Permission[] = [];
+  prohibitions: Permission[] = [];
 
   clone(): Policy {
     const policy = new Policy();
@@ -242,3 +245,5 @@ export enum OutputKind {
   Prefixed = 'Prefixed',
   Plain = 'Plain',
 }
+
+export type RuleType = 'Permission' | 'Obligation' | 'Prohibition';

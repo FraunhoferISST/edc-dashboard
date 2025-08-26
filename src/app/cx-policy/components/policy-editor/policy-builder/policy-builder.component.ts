@@ -19,7 +19,7 @@
  ******************************************************************************/
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Permission, PolicyConfiguration } from '../../../models/policy';
+import { Action, Permission, PolicyConfiguration, RuleType } from '../../../models/policy';
 import { NgIf } from '@angular/common';
 import { PermissionComponent } from './permission/permission.component';
 import { FormsModule } from '@angular/forms';
@@ -33,6 +33,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class PolicyBuilderComponent {
   private _policyConfig!: PolicyConfiguration;
+
   @Input()
   get policyConfig() {
     return this._policyConfig;
@@ -51,26 +52,57 @@ export class PolicyBuilderComponent {
 
   currentPermission?: Permission;
 
-  panelOpenState = true;
-
-  addPermission() {
-    this.currentPermission = new Permission('New Permission');
-    this.policyConfig.policy.permissions.push(this.currentPermission);
-    this.policyChange.emit(this.policyConfig);
-  }
-
-  onPermissionChange() {
-    this.policyChange.emit(this.policyConfig);
-  }
-
-  onPermissionSelectionChange(selection: Permission) {
-    this.currentPermission = selection;
-  }
-  removePermission(target: Permission) {
-    this.policyConfig.policy.permissions = this.policyConfig.policy.permissions.filter(item => item != target);
-    if (target == this.currentPermission) {
-      this.currentPermission = this.policyConfig.policy.permissions[0] ?? undefined;
+  addRule(ruleType: RuleType) {
+    this.currentPermission = new Permission(`New ${ruleType}`);
+    switch (ruleType) {
+      case 'Permission':
+        this.policyConfig.policy.permissions.push(this.currentPermission);
+        break;
+      case 'Obligation':
+        this.policyConfig.policy.obligations.push(this.currentPermission);
+        break;
+      case 'Prohibition':
+        this.policyConfig.policy.prohibitions.push(this.currentPermission);
+        break;
     }
     this.policyChange.emit(this.policyConfig);
   }
+
+  onRuleChange() {
+    this.policyChange.emit(this.policyConfig);
+  }
+
+  onRuleSelectionChange(selection: Permission) {
+    this.currentPermission = selection;
+  }
+
+  removeRule(target: Permission, ruleType: RuleType) {
+    switch (ruleType) {
+      case 'Permission':
+        this.policyConfig.policy.permissions = this.policyConfig.policy.permissions.filter(item => item != target);
+        break;
+      case 'Obligation':
+        this.policyConfig.policy.obligations = this.policyConfig.policy.obligations.filter(item => item != target);
+        break;
+      case 'Prohibition':
+        this.policyConfig.policy.prohibitions = this.policyConfig.policy.prohibitions.filter(item => item != target);
+        break;
+    }
+    if (target == this.currentPermission) {
+      switch (ruleType) {
+        case 'Permission':
+          this.currentPermission = this.policyConfig.policy.permissions[0] ?? undefined;
+          break;
+        case 'Obligation':
+          this.currentPermission = this.policyConfig.policy.obligations[0] ?? undefined;
+          break;
+        case 'Prohibition':
+          this.currentPermission = this.policyConfig.policy.prohibitions[0] ?? undefined;
+          break;
+      }
+    }
+    this.policyChange.emit(this.policyConfig);
+  }
+
+  protected readonly Action = Action;
 }
