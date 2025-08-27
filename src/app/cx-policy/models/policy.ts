@@ -41,12 +41,8 @@ export class Permission {
 }
 
 export class LogicalConstraint implements Constraint {
-  operator: LogicalOperator;
+  operator: LogicalOperator = LogicalOperator.And;
   constraints: Constraint[] = [];
-
-  constructor(operator: LogicalOperator = LogicalOperator.And) {
-    this.operator = operator;
-  }
 
   clone(): LogicalConstraint {
     const cloned = new LogicalConstraint();
@@ -68,48 +64,46 @@ export class LogicalConstraint implements Constraint {
   }
 }
 
-export class LeftOperand {
-  value: string;
-
-  constructor(value: string) {
-    this.value = value;
-  }
-
-  toString() {
-    return `${this.value}`;
-  }
+export interface RightOperand {
+  operandType?: 'string' | 'integer';
+  legalText?: {
+    obligation?: string;
+    permission?: string;
+    prohibition?: string;
+    additionalInformation?: string;
+  };
+  const?: string;
+  pattern?: string;
+  value?: string;
 }
 
 export class AtomicConstraint implements Constraint {
-  leftOperand!: LeftOperand;
-  operator: Operator;
-  rightOperand?: string | number | Value;
-  kind: ValueKind;
+  leftOperand!: string;
+  operator!: [Operator, ...Operator[]];
+  rightOperand!: string | number | RightOperand | RightOperand[];
   contexts: string[] = [];
   prefixes: string[] = [];
   label?: string;
-  constructor();
-  constructor(leftOperand: LeftOperand);
-  constructor(leftOperand: LeftOperand, operator: Operator, rightOperator: RightOperand);
-  constructor(leftOperand: LeftOperand, operator: Operator, rightOperator: RightOperand, kind: ValueKind);
   constructor(
-    leftOperand?: LeftOperand,
-    operator: Operator = Operator.Eq,
-    rightOperand?: string | number | Value,
-    kind: ValueKind = ValueKind.String,
+    leftOperand: string,
+    operator: [string, ...string[]],
+    rightOperand: string | number | RightOperand | RightOperand[],
   ) {
-    this.kind = kind;
-    this.operator = operator;
-    this.leftOperand = leftOperand != null ? leftOperand : new LeftOperand('');
+    this.leftOperand = leftOperand;
+    this.operator = operator.map(x => this._stringToOperator(x)) as [Operator, ...Operator[]];
     this.rightOperand = rightOperand;
   }
 
+  private _stringToOperator(str: string): Operator {
+    if (str in Operator) {
+      return Operator[str as keyof typeof Operator];
+    } else {
+      throw new Error(`Unsupported operator "${str}"`);
+    }
+  }
+
   clone(): AtomicConstraint {
-    const cloned = new AtomicConstraint();
-    cloned.kind = this.kind;
-    cloned.leftOperand = this.leftOperand;
-    cloned.operator = this.operator;
-    cloned.rightOperand = this.rightOperand;
+    const cloned = new AtomicConstraint(this.leftOperand, this.operator, this.rightOperand);
     cloned.contexts = this.contexts;
     cloned.label = this.label;
     cloned.prefixes = this.prefixes;
@@ -125,7 +119,7 @@ export class AtomicConstraint implements Constraint {
   }
 
   get_label(): string {
-    return this.label != null ? this.label : this.leftOperand.value;
+    return this.label != null ? this.label : this.leftOperand;
   }
 
   with_context(ctx: string): AtomicConstraint {
@@ -150,26 +144,6 @@ export class AtomicConstraint implements Constraint {
   }
 }
 
-export enum ValueKind {
-  String = 'String',
-  Number = 'Number',
-  Value = 'Value',
-}
-
-export class Value {
-  value?: string | number;
-  ty?: string;
-
-  constructor(value?: string | number, ty?: string) {
-    this.value = value;
-    this.ty = ty;
-  }
-
-  toString() {
-    return `${this.value}`;
-  }
-}
-
 export enum LogicalOperator {
   And = 'And',
   Or = 'Or',
@@ -189,17 +163,18 @@ export enum Action {
 
 export enum Operator {
   Eq = 'eq',
-  Neq = 'neq',
+  Gt = 'gt',
   Gte = 'gteq',
   Lte = 'lteq',
-  In = 'isPartOf',
-  AnyOf = 'isAnyOf',
-  AllOf = 'isAllOf',
-  NoneOf = 'isNoneOf',
-}
-
-export interface ConstraintContainer {
-  constraints: Constraint[];
+  HasPart = 'hasPart',
+  IsA = 'isA',
+  IsAllOf = 'isAllOf',
+  IsAnyOf = 'isAnyOf',
+  IsNoneOf = 'isNoneOf',
+  IsPartOf = 'isPartOf',
+  Lt = 'lt',
+  TermLteq = 'term-lteq',
+  Neq = 'neq',
 }
 
 export class Policy {
@@ -238,8 +213,6 @@ export interface ConstraintTemplate {
   multiple: boolean;
   factory: () => Constraint;
 }
-
-export type RightOperand = string | number | Value;
 
 export enum OutputKind {
   Prefixed = 'Prefixed',
