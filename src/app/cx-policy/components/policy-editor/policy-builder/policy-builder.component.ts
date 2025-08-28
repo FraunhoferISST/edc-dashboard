@@ -19,10 +19,18 @@
  ******************************************************************************/
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Action, Permission, PolicyConfiguration, RuleType } from '../../../models/policy';
+import {
+  Action,
+  AtomicConstraint,
+  Constraint,
+  Permission,
+  PolicyConfiguration,
+  RuleType,
+} from '../../../models/policy';
 import { NgIf } from '@angular/common';
 import { PermissionComponent } from './permission/permission.component';
 import { FormsModule } from '@angular/forms';
+import { RuleSets } from '../../../services/atomic-constraints';
 
 @Component({
   selector: 'app-policy-builder',
@@ -34,6 +42,9 @@ import { FormsModule } from '@angular/forms';
 export class PolicyBuilderComponent {
   private _policyConfig!: PolicyConfiguration;
 
+  currentPermission?: Permission;
+  constraintTemplates?: AtomicConstraint[];
+
   @Input()
   get policyConfig() {
     return this._policyConfig;
@@ -43,6 +54,7 @@ export class PolicyBuilderComponent {
     this._policyConfig = cfg;
     if (cfg.policy.permissions.length > 0) {
       this.currentPermission = cfg.policy.permissions[0];
+      this.changeConstraintTemplates('Permission');
     } else {
       this.currentPermission = undefined;
     }
@@ -50,7 +62,30 @@ export class PolicyBuilderComponent {
 
   @Output() policyChange = new EventEmitter<PolicyConfiguration>();
 
-  currentPermission?: Permission;
+  changeConstraintTemplates(ruleType: RuleType) {
+    switch (this.policyConfig.policy.type) {
+      case Action.Access: {
+        this.constraintTemplates = RuleSets.AccessPermissions();
+        break;
+      }
+      case Action.Use: {
+        switch (ruleType) {
+          case 'Permission': {
+            this.constraintTemplates = RuleSets.UsagePermissions();
+            break;
+          }
+          case 'Obligation': {
+            this.constraintTemplates = RuleSets.UsageObligations();
+            break;
+          }
+          case 'Prohibition': {
+            this.constraintTemplates = RuleSets.UsageProhibitions();
+            break;
+          }
+        }
+      }
+    }
+  }
 
   addRule(ruleType: RuleType) {
     this.currentPermission = new Permission(`New ${ruleType}`);
@@ -72,8 +107,9 @@ export class PolicyBuilderComponent {
     this.policyChange.emit(this.policyConfig);
   }
 
-  onRuleSelectionChange(selection: Permission) {
+  onRuleSelectionChange(selection: Permission, ruleType: RuleType) {
     this.currentPermission = selection;
+    this.changeConstraintTemplates(ruleType);
   }
 
   removeRule(target: Permission, ruleType: RuleType) {

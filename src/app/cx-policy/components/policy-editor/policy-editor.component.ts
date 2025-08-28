@@ -24,9 +24,9 @@ import { Action, OutputKind, PolicyConfiguration } from '../../models/policy';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { FormatService } from '../../services/format.service';
-import { PolicyConfigurationStore } from '../../stores/policy.store';
 import { PolicyService } from '../../services/policy.service';
 import { DeleteConfirmComponent, ModalAndAlertService } from '@eclipse-edc/dashboard-core';
+import { PolicyTemplates } from '../../services/atomic-constraints';
 
 @Component({
   selector: 'app-policy-editor',
@@ -34,60 +34,64 @@ import { DeleteConfirmComponent, ModalAndAlertService } from '@eclipse-edc/dashb
   styleUrls: ['./policy-editor.component.css'],
   standalone: true,
   imports: [PolicyBuilderComponent, FormsModule, NgFor],
-  providers: [PolicyConfigurationStore],
 })
 export class PolicyEditorComponent {
   text!: string;
 
   outputFormats: string[];
-  policyConfig: PolicyConfiguration;
+  policyType: Action = Action.Use;
+  policyTemplates = {
+    access: PolicyTemplates.AccessTemplates(),
+    usage: PolicyTemplates.UsageTemplates(),
+  };
 
   currentFormat: OutputKind;
 
-  configurations: PolicyConfiguration[] = [];
+  currentTemplate: PolicyConfiguration;
 
   constructor(
     public formatService: FormatService,
-    public store: PolicyConfigurationStore,
     public policyService: PolicyService,
     readonly modalService: ModalAndAlertService,
   ) {
-    this.configurations = store.loadConfigurations();
     this.currentFormat = OutputKind.Plain;
-
-    if (this.configurations.length == 0) {
-      store.store(new PolicyConfiguration('Policy Template'));
-    }
-    this.policyConfig = this.configurations[0];
+    this.currentTemplate = this.policyTemplates.usage[0];
     this.outputFormats = policyService.supportedOutput();
 
-    this.updateJsonText(this.policyConfig, this.currentFormat);
+    this.updateJsonText(this.currentTemplate, this.currentFormat);
   }
 
-  addPolicy(): void {
-    this.policyConfig = new PolicyConfiguration('New Policy');
-    this.store.store(this.policyConfig);
-  }
-
-  copyPolicy() {
-    this.policyConfig = this.policyConfig.clone();
-    this.store.store(this.policyConfig);
+  getTemplates(): PolicyConfiguration[] {
+    if (this.policyType === Action.Use) {
+      return this.policyTemplates.usage;
+    }
+    return this.policyTemplates.access;
   }
 
   onTypeChange(type: Action) {
-    const updatePolicy = (to: Action) => {
-      this.policyConfig.policy.obligations = [];
-      this.policyConfig.policy.prohibitions = [];
-      this.policyConfig.policy.permissions.forEach(x => (x.action = to));
-      this.updateJsonText(this.policyConfig, this.currentFormat);
+    const changeType = (to: Action) => {
+      this.policyType = to;
+      this.currentTemplate.policy.type = to;
     };
+    const updatePolicy = (to: Action) => {
+      this.currentTemplate.policy.obligations = [];
+      this.currentTemplate.policy.prohibitions = [];
+      this.currentTemplate.policy.permissions.forEach(x => (x.action = to));
+      this.updateJsonText(this.currentTemplate, this.currentFormat);
+    };
+
+    changeType(type);
+
     if (type === Action.Access) {
-      if (this.policyConfig.policy.obligations.length !== 0 || this.policyConfig.policy.prohibitions.length !== 0) {
+      if (
+        this.currentTemplate.policy.obligations.length !== 0 ||
+        this.currentTemplate.policy.prohibitions.length !== 0
+      ) {
         let isConfirmed = false;
         const cancelCallback = () => {
           this.modalService.closeModal();
           if (!isConfirmed) {
-            this.policyConfig.policy.type = Action.Use;
+            changeType(Action.Use);
           }
         };
         this.modalService.openModal(
@@ -116,7 +120,7 @@ export class PolicyEditorComponent {
   }
 
   onConfigSelectionChange(cfg: PolicyConfiguration) {
-    this.policyConfig = cfg;
+    this.currentTemplate = cfg;
     this.updateJsonText(cfg, this.currentFormat);
   }
   onConfigChange(cfg: PolicyConfiguration) {

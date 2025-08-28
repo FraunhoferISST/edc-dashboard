@@ -1360,7 +1360,7 @@ export class AtomicConstraints {
 }
 
 export class RuleSets {
-  static AccessPermissions(): Constraint[] {
+  static AccessPermissions(): AtomicConstraint[] {
     return [
       AtomicConstraints.FrameworkAgreementConstraint(),
       AtomicConstraints.MembershipConstraint(),
@@ -1369,7 +1369,7 @@ export class RuleSets {
     ];
   }
 
-  static UsagePermissions(): Constraint[] {
+  static UsagePermissions(): AtomicConstraint[] {
     return [
       AtomicConstraints.FrameworkAgreementConstraint(),
       AtomicConstraints.MembershipConstraint(),
@@ -1398,14 +1398,14 @@ export class RuleSets {
     ];
   }
 
-  static UsageObligations(): Constraint[] {
+  static UsageObligations(): AtomicConstraint[] {
     return [
       AtomicConstraints.DataProvisioningEndDurationDaysConstraint(),
       AtomicConstraints.DataProvisioningEndDateConstraint(),
     ];
   }
 
-  static UsageProhibitions(): Constraint[] {
+  static UsageProhibitions(): AtomicConstraint[] {
     return [
       AtomicConstraints.AffiliatesRegionConstraint(),
       AtomicConstraints.AffiliatesBpnlConstraint1(),

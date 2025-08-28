@@ -33,9 +33,9 @@
         tabindex="0"
         class="dropdown-content menu shadow-2xl bg-base-300 rounded-2xl flex-nowrap overflow-y-auto max-h-[50vh]"
       >
-        @for (constraint of constraints; track constraint.name) {
-          <li (click)="addConstraint(constraint.factory())">
-            <a class="truncate">{{ constraint.name }}</a>
+        @for (constraint of constraints; track constraint) {
+          <li (click)="addConstraint(constraint.clone())">
+            <a class="truncate">{{ constraint.leftOperand }}</a>
           </li>
         }
       </ul>
@@ -66,9 +66,9 @@
               tabindex="0"
               class="dropdown-content menu shadow-2xl bg-base-300 rounded-2xl flex-nowrap overflow-y-auto"
             >
-              @for (atomic of getAtomicConstraintTemplates(); track atomic.name) {
-                <li (click)="addConstraint(atomic.factory(), constraint)">
-                  <a class="truncate">{{ atomic.name }}</a>
+              @for (atomic of constraints; track atomic) {
+                <li (click)="addConstraint(atomic.clone(), constraint)">
+                  <a class="truncate">{{ atomic.leftOperand }}</a>
                 </li>
               }
             </ul>

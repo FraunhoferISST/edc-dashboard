@@ -65,40 +65,45 @@ export class LogicalConstraint implements Constraint {
 }
 
 export interface RightOperand {
-  operandType?: 'string' | 'integer';
+  name: string;
+  operandType: 'string' | 'integer';
   legalText?: {
     obligation?: string;
     permission?: string;
     prohibition?: string;
     additionalInformation?: string;
   };
-  const?: string;
+  const?: string | number;
   pattern?: string;
-  value?: string;
+  value?: string | number;
 }
 
 export class AtomicConstraint implements Constraint {
   leftOperand!: string;
   operator!: [Operator, ...Operator[]];
-  rightOperand!: string | number | RightOperand | RightOperand[];
+  selectedOperator: Operator;
+  rightOperand!: RightOperand | RightOperand[];
+  rightOperandValue: RightOperand | RightOperand[];
   contexts: string[] = [];
   prefixes: string[] = [];
   label?: string;
-  constructor(
-    leftOperand: string,
-    operator: [string, ...string[]],
-    rightOperand: string | number | RightOperand | RightOperand[],
-  ) {
+  constructor(leftOperand: string, operator: [string, ...string[]], rightOperand: RightOperand | RightOperand[]) {
     this.leftOperand = leftOperand;
     this.operator = operator.map(x => this._stringToOperator(x)) as [Operator, ...Operator[]];
     this.rightOperand = rightOperand;
+    this.selectedOperator = this.operator[0];
+    if (Array.isArray(rightOperand)) {
+      this.rightOperandValue = [(this.rightOperand as RightOperand[])[0]];
+    } else {
+      this.rightOperandValue = this.rightOperand;
+    }
   }
 
   private _stringToOperator(str: string): Operator {
-    if (str in Operator) {
-      return Operator[str as keyof typeof Operator];
-    } else {
-      throw new Error(`Unsupported operator "${str}"`);
+    try {
+      return str as Operator;
+    } catch (e) {
+      throw new Error(`Unsupported operator "${str}": ${e}`);
     }
   }
 

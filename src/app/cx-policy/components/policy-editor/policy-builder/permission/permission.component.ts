@@ -19,13 +19,7 @@
  ******************************************************************************/
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-  AtomicConstraint,
-  Constraint,
-  ConstraintTemplate,
-  LogicalConstraint,
-  Permission,
-} from '../../../../models/policy';
+import { AtomicConstraint, Constraint, LogicalConstraint, Permission } from '../../../../models/policy';
 import { FormsModule } from '@angular/forms';
 import { PolicyService } from '../../../../services/policy.service';
 import { ModalAndAlertService } from '@eclipse-edc/dashboard-core';
@@ -44,22 +38,17 @@ export class PermissionComponent {
   @Output()
   permissionChange = new EventEmitter<void>();
 
-  @Input() constraints: ConstraintTemplate[] = [];
+  @Input() constraints: AtomicConstraint[] = [];
 
   constructor(
     policyService: PolicyService,
     readonly modalService: ModalAndAlertService,
   ) {
     this.actions = policyService.actions();
-    this.constraints = policyService.constraintTemplates();
   }
 
   getConstraintType(constraint: Constraint): 'atomic' | 'logical' {
     return constraint instanceof AtomicConstraint ? 'atomic' : 'logical';
-  }
-
-  getAtomicConstraintTemplates() {
-    return this.constraints.filter(c => !c.multiple);
   }
 
   getSubConstraints(constraint: Constraint): Constraint[] {

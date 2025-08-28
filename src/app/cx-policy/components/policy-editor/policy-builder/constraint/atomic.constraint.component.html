@@ -22,13 +22,13 @@
   <div class="flex flex-row gap-x-1">
     <div class="form-control w-3/5">
       <label class="label">
-        <span class="label-text">Left Operand (value)</span>
+        <span class="label-text">Left Operand</span>
       </label>
       <input
         type="text"
         class="input input-bordered w-full"
-        [(ngModel)]="constraint.leftOperand.value"
-        [disabled]="disabled"
+        [(ngModel)]="constraint.leftOperand"
+        [disabled]="true"
       />
     </div>
   </div>
@@ -38,56 +38,43 @@
     </label>
     <select
       class="select select-bordered w-full"
-      [(ngModel)]="constraint.operator"
-      [disabled]="disabled"
+      [(ngModel)]="constraint.selectedOperator"
+      [disabled]="constraint.operator.length === 1"
     >
-      <option *ngFor="let operator of operators" [ngValue]="operator">
+      <option *ngFor="let operator of constraint.operator" [ngValue]="operator">
         {{ operator }}
       </option>
     </select>
   </div>
+
   <div class="form-control w-full">
-    <label class="label">
-      <span class="label-text">Right Operand Kind</span>
-    </label>
-    <select
-      class="select select-bordered w-full"
-      [(ngModel)]="constraint.kind"
-      (ngModelChange)="onKindChange($event)"
-      [disabled]="disabled"
-    >
-      <option *ngFor="let t of types" [ngValue]="t">
-        {{ t }}
-      </option>
-    </select>
-  </div>
-  <div [ngSwitch]="constraint.kind" class="w-full">
-    <div class="form-control w-full" *ngSwitchCase="'String'">
+    @if (rightOperand) {
       <label class="label">
         <span class="label-text">Right Operand</span>
       </label>
-      <input
-        type="text"
-        class="input input-bordered w-full"
-        [(ngModel)]="constraint.rightOperand"
-        [disabled]="disabled"
-      />
-    </div>
-    <div class="form-control w-full" *ngSwitchCase="'Number'">
-      <label class="label">
-        <span class="label-text">Right Operand</span>
-      </label>
-      <input
-        type="number"
-        class="input input-bordered w-full"
-        [(ngModel)]="constraint.rightOperand"
-        [disabled]="disabled"
-      />
-    </div>
-    <app-value-expression
-      [constraint]="constraint"
-      *ngSwitchCase="'Value'"
-      class="w-full"
-    ></app-value-expression>
+      @if (rightOperand.operandType === 'string') {
+        @if (rightOperand.const) {
+          <input type="text" class="input input-bordered w-full" [(ngModel)]="rightOperand.const" disabled />
+        } @else if (rightOperand.pattern) {
+          <input type="text"
+                 class="input input-bordered w-full validator"
+                 required
+                 [pattern]="rightOperand.pattern"
+                 [(ngModel)]="rightOperand.value"
+          />
+          <p class="validator-hint">Does not match pattern: {{ rightOperand.pattern }}</p>
+        } @else {
+          <input type="text" class="input input-bordered w-full" required [(ngModel)]="rightOperand.value" />
+        }
+      } @else {
+        @if (rightOperand.const) {
+          <input type="number" class="input input-bordered w-full" [(ngModel)]="rightOperand.const" disabled />
+        } @else {
+          <input type="number" class="input input-bordered w-full" required [(ngModel)]="rightOperand.value" />
+        }
+      }
+    } @else {
+      <p>ToDo</p>
+    }
   </div>
 </div>

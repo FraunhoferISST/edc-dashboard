@@ -18,44 +18,25 @@
  * SPDX-License-Identifier: Apache-2.0
  ******************************************************************************/
 
-import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AtomicConstraint, Value, ValueKind } from '../../../../models/policy';
-import { PolicyService } from '../../../../services/policy.service';
-import { ValueExpressionComponent } from './value.expression.component';
+import { AtomicConstraint, RightOperand } from '../../../../models/policy';
 
 @Component({
   selector: 'app-atomic-constraint',
   templateUrl: './atomic.constraint.component.html',
   styleUrls: [],
   standalone: true,
-  imports: [FormsModule, NgFor, NgSwitch, NgSwitchCase, ValueExpressionComponent],
+  imports: [FormsModule, NgFor],
 })
-export class AtomicConstraintComponent {
-  operators: string[];
-  types: string[];
+export class AtomicConstraintComponent implements OnInit {
   @Input() constraint!: AtomicConstraint;
-  @Input() disabled = false;
+  rightOperand?: RightOperand;
 
-  constructor(policyService: PolicyService) {
-    this.operators = policyService.operators();
-    this.types = policyService.valueKinds();
-  }
-
-  onKindChange(kind: ValueKind) {
-    switch (kind) {
-      case ValueKind.Number: {
-        this.constraint.rightOperand = 0;
-        break;
-      }
-      case ValueKind.String: {
-        this.constraint.rightOperand = '';
-        break;
-      }
-      case ValueKind.Value: {
-        this.constraint.rightOperand = new Value('', '');
-      }
+  ngOnInit() {
+    if (!Array.isArray(this.constraint.rightOperandValue)) {
+      this.rightOperand = this.constraint.rightOperandValue as RightOperand;
     }
   }
 }

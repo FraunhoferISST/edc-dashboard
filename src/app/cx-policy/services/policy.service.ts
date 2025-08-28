@@ -21,25 +21,7 @@
 /*eslint-disable @typescript-eslint/no-explicit-any*/
 
 import { Injectable } from '@angular/core';
-import {
-  Action,
-  AtomicConstraint,
-  ConstraintTemplate,
-  LeftOperand,
-  LogicalConstraint,
-  LogicalOperator,
-  Operator,
-  OutputKind,
-  PolicyConfiguration,
-  ValueKind,
-} from '../models/policy';
-import {
-  bpnConstraint,
-  bpnGroupConstraint,
-  credentialsConstraints,
-  inForceDurationConstraint,
-  inForceFixedConstraint,
-} from './constraints';
+import { Action, LogicalOperator, OutputKind, PolicyConfiguration } from '../models/policy';
 
 export const NAMESPACES: any = {
   edc: 'https://w3id.org/edc/v0.0.1/ns/',
@@ -54,14 +36,6 @@ export class PolicyService {
     return this.values(LogicalOperator);
   }
 
-  operators(): string[] {
-    return this.values(Operator);
-  }
-
-  valueKinds(): string[] {
-    return this.values(ValueKind);
-  }
-
   actions(): string[] {
     return this.values(Action);
   }
@@ -72,51 +46,6 @@ export class PolicyService {
 
   private values(val: object): string[] {
     return Object.values(val).filter(value => typeof value === 'string') as string[];
-  }
-
-  constraintTemplates(): ConstraintTemplate[] {
-    const credentialConstraints = credentialsConstraints();
-
-    const credentialConstraintsTemplate = credentialConstraints.map(c => {
-      return {
-        name: c.get_label() + ' credential',
-        multiple: false,
-        factory: () => c,
-      };
-    });
-    return [
-      {
-        name: 'Atomic Constraint',
-        multiple: false,
-        factory: () => new AtomicConstraint(new LeftOperand('<field>'), Operator.Eq, '<value>'),
-      },
-      {
-        name: 'Logical Constraint',
-        multiple: true,
-        factory: () => new LogicalConstraint(),
-      },
-      {
-        name: 'BPN Constraint',
-        multiple: false,
-        factory: bpnConstraint,
-      },
-      {
-        name: 'BPN Group Constraint',
-        multiple: false,
-        factory: bpnGroupConstraint,
-      },
-      {
-        name: 'In Force Constraint (Duration)',
-        multiple: true,
-        factory: inForceDurationConstraint,
-      },
-      {
-        name: 'In Force Constraint (Fixed)',
-        multiple: true,
-        factory: inForceFixedConstraint,
-      },
-      ...credentialConstraintsTemplate,
-    ];
   }
 
   namespacesFor(policy: PolicyConfiguration): any {

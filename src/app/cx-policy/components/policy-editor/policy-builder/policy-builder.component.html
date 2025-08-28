@@ -34,7 +34,7 @@
       <ul>
         @for (permission of policyConfig.policy.permissions; track permission.name) {
           <div class="group flex flex-row justify-between flex-nowrap items-center">
-            <li class="w-40 mr-2" (click)="onRuleSelectionChange(permission)">
+            <li class="w-40 mr-2" (click)="onRuleSelectionChange(permission, 'Permission')">
               <a [class.text-primary]="permission === currentPermission">{{ permission.name }}</a>
             </li>
             <button
@@ -63,7 +63,7 @@
         <ul>
           @for (obligation of policyConfig.policy.obligations; track obligation.name) {
             <div class="group flex flex-row justify-between flex-nowrap items-center">
-              <li class="w-40 mr-2" (click)="onRuleSelectionChange(obligation)">
+              <li class="w-40 mr-2" (click)="onRuleSelectionChange(obligation, 'Obligation')">
                 <a [class.text-primary]="obligation === currentPermission">{{ obligation.name }}</a>
               </li>
               <button
@@ -91,7 +91,7 @@
         <ul>
           @for (prohibition of policyConfig.policy.prohibitions; track prohibition.name) {
             <div class="group flex flex-row justify-between flex-nowrap items-center">
-              <li class="w-40 mr-2" (click)="onRuleSelectionChange(prohibition)">
+              <li class="w-40 mr-2" (click)="onRuleSelectionChange(prohibition, 'Prohibition')">
                 <a [class.text-primary]="prohibition === currentPermission">{{ prohibition.name }}</a>
               </li>
               <button
@@ -109,9 +109,10 @@
   </ul>
 
   <app-permission
-    *ngIf="currentPermission"
+    *ngIf="currentPermission && constraintTemplates"
     (permissionChange)="onRuleChange()"
     [permission]="currentPermission"
+    [constraints]="constraintTemplates"
     class="max-w-full"
   ></app-permission>
 </div>
