@@ -25,7 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { FormatService } from '../../services/format.service';
 import { PolicyService } from '../../services/policy.service';
-import { DeleteConfirmComponent, ModalAndAlertService } from '@eclipse-edc/dashboard-core';
+import { ModalAndAlertService } from '@eclipse-edc/dashboard-core';
 import { PolicyTemplates } from '../../services/atomic-constraints';
 
 @Component({
@@ -40,13 +40,9 @@ export class PolicyEditorComponent {
 
   outputFormats: string[];
   policyType: Action = Action.Use;
-  policyTemplates = {
-    access: PolicyTemplates.AccessTemplates(),
-    usage: PolicyTemplates.UsageTemplates(),
-  };
+  templates: PolicyConfiguration[];
 
   currentFormat: OutputKind;
-
   currentTemplate: PolicyConfiguration;
 
   constructor(
@@ -55,72 +51,24 @@ export class PolicyEditorComponent {
     readonly modalService: ModalAndAlertService,
   ) {
     this.currentFormat = OutputKind.Plain;
-    this.currentTemplate = this.policyTemplates.usage[0];
+    this.templates = PolicyTemplates.UsageTemplates();
+    this.currentTemplate = this.templates[0];
     this.outputFormats = policyService.supportedOutput();
 
     this.updateJsonText(this.currentTemplate, this.currentFormat);
   }
 
-  getTemplates(): PolicyConfiguration[] {
-    if (this.policyType === Action.Use) {
-      return this.policyTemplates.usage;
-    }
-    return this.policyTemplates.access;
-  }
-
   onTypeChange(type: Action) {
-    const changeType = (to: Action) => {
-      this.policyType = to;
-      this.currentTemplate.policy.type = to;
-    };
-    const updatePolicy = (to: Action) => {
-      this.currentTemplate.policy.obligations = [];
-      this.currentTemplate.policy.prohibitions = [];
-      this.currentTemplate.policy.permissions.forEach(x => (x.action = to));
-      this.updateJsonText(this.currentTemplate, this.currentFormat);
-    };
-
-    changeType(type);
-
-    if (type === Action.Access) {
-      if (
-        this.currentTemplate.policy.obligations.length !== 0 ||
-        this.currentTemplate.policy.prohibitions.length !== 0
-      ) {
-        let isConfirmed = false;
-        const cancelCallback = () => {
-          this.modalService.closeModal();
-          if (!isConfirmed) {
-            changeType(Action.Use);
-          }
-        };
-        this.modalService.openModal(
-          DeleteConfirmComponent,
-          {
-            customText:
-              'Access policies ONLY allow permissions. All existing obligations and prohibitions will be deleted!',
-          },
-          {
-            canceled: cancelCallback,
-            confirm: () => {
-              isConfirmed = true;
-              this.modalService.closeModal();
-              updatePolicy(Action.Access);
-            },
-          },
-          false,
-          cancelCallback,
-        );
-      } else {
-        updatePolicy(Action.Use);
-      }
+    this.policyType = type;
+    if (type === Action.Use) {
+      this.templates = PolicyTemplates.UsageTemplates();
     } else {
-      updatePolicy(Action.Use);
+      this.templates = PolicyTemplates.AccessTemplates();
     }
+    this.currentTemplate = this.templates[0];
   }
 
   onConfigSelectionChange(cfg: PolicyConfiguration) {
-    this.currentTemplate = cfg;
     this.updateJsonText(cfg, this.currentFormat);
   }
   onConfigChange(cfg: PolicyConfiguration) {

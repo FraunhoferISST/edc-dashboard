@@ -1,5 +1,5 @@
 // atomic-constraints.ts
-import { AtomicConstraint, Constraint, Permission, PolicyConfiguration, RightOperand } from '../models/policy';
+import { Action, AtomicConstraint, Constraint, Permission, PolicyConfiguration, RightOperand } from '../models/policy';
 
 export class RightOperands {
   static DataProvisioningEndDurationDays(): RightOperand {
@@ -1422,8 +1422,10 @@ export class PolicyTemplates {
       const template = new PolicyConfiguration(name);
       const permission = new Permission();
       permission.name = atomic.leftOperand;
+      permission.action = Action.Access;
       permission.constraints.push(constraint);
       template.policy.permissions.push(permission);
+      template.policy.type = Action.Access;
       return template;
     });
   }

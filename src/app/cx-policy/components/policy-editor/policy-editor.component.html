@@ -34,7 +34,7 @@
       <label class="select w-full">
         <span class="label">Select Policy Template</span>
         <select class="select w-full" [(ngModel)]="currentTemplate" (ngModelChange)="onConfigSelectionChange($event)">
-          @for (template of getTemplates(); track template.name) {
+          @for (template of templates; track template.policy) {
             <option [ngValue]="template">{{ template.name }}</option>
           }
         </select>

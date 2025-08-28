@@ -19,14 +19,7 @@
  ******************************************************************************/
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-  Action,
-  AtomicConstraint,
-  Constraint,
-  Permission,
-  PolicyConfiguration,
-  RuleType,
-} from '../../../models/policy';
+import { Action, AtomicConstraint, Permission, PolicyConfiguration, RuleType } from '../../../models/policy';
 import { NgIf } from '@angular/common';
 import { PermissionComponent } from './permission/permission.component';
 import { FormsModule } from '@angular/forms';
@@ -55,6 +48,12 @@ export class PolicyBuilderComponent {
     if (cfg.policy.permissions.length > 0) {
       this.currentPermission = cfg.policy.permissions[0];
       this.changeConstraintTemplates('Permission');
+    } else if (cfg.policy.obligations.length > 0) {
+      this.currentPermission = cfg.policy.obligations[0];
+      this.changeConstraintTemplates('Obligation');
+    } else if (cfg.policy.prohibitions.length > 0) {
+      this.currentPermission = cfg.policy.prohibitions[0];
+      this.changeConstraintTemplates('Prohibition');
     } else {
       this.currentPermission = undefined;
     }
@@ -88,19 +87,20 @@ export class PolicyBuilderComponent {
   }
 
   addRule(ruleType: RuleType) {
-    this.currentPermission = new Permission(`New ${ruleType}`);
+    const rule = new Permission(`New ${ruleType}`);
     switch (ruleType) {
       case 'Permission':
-        this.policyConfig.policy.permissions.push(this.currentPermission);
+        this.policyConfig.policy.permissions.push(rule);
         break;
       case 'Obligation':
-        this.policyConfig.policy.obligations.push(this.currentPermission);
+        this.policyConfig.policy.obligations.push(rule);
         break;
       case 'Prohibition':
-        this.policyConfig.policy.prohibitions.push(this.currentPermission);
+        this.policyConfig.policy.prohibitions.push(rule);
         break;
     }
-    this.policyChange.emit(this.policyConfig);
+    this.onRuleSelectionChange(rule, ruleType);
+    this.onRuleChange();
   }
 
   onRuleChange() {
