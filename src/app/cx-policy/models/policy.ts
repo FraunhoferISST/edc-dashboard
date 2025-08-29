@@ -93,9 +93,9 @@ export class AtomicConstraint implements Constraint {
     this.rightOperand = rightOperand;
     this.selectedOperator = this.operator[0];
     if (Array.isArray(rightOperand)) {
-      this.rightOperandValue = [(this.rightOperand as RightOperand[])[0]];
+      this.rightOperandValue = [structuredClone((this.rightOperand as RightOperand[])[0])];
     } else {
-      this.rightOperandValue = this.rightOperand;
+      this.rightOperandValue = structuredClone(this.rightOperand);
     }
   }
 
@@ -112,7 +112,7 @@ export class AtomicConstraint implements Constraint {
     cloned.contexts = this.contexts;
     cloned.label = this.label;
     cloned.prefixes = this.prefixes;
-    cloned.rightOperandValue = this.rightOperandValue;
+    cloned.rightOperandValue = structuredClone(this.rightOperandValue);
     cloned.selectedOperator = this.selectedOperator;
     return cloned;
   }

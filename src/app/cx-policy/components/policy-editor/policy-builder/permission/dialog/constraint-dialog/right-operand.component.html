@@ -2,7 +2,7 @@
   <div class="join w-full">
     <label class="join-item input w-fit">
       <span class="label">Type</span>
-      <select [(ngModel)]="rightOperand" (ngModelChange)="changed.emit($event)">
+      <select [(ngModel)]="rightOperand" (ngModelChange)="onOperandChange($event)" [compareWith]="compare">
         @for (type of selectTypes; track type.name) {
           <option [ngValue]="type">{{ camelCaseToWords(type.name) }}</option>
         }
@@ -16,13 +16,17 @@
         disabled
       />
     } @else if (rightOperand.pattern) {
-      <input
-        [type]="getOperandType()"
-        class="join-item input input-bordered w-full"
-        required
-        [pattern]="rightOperand.pattern"
-        [(ngModel)]="rightOperand.value"
-      />
+      <ng-container [formGroup]="parentFormGroup">
+        <input
+          [formGroup]="parentFormGroup"
+          [type]="getOperandType()"
+          class="w-full"
+          required
+          [pattern]="rightOperand.pattern"
+          [formControlName]="uuid"
+          [(ngModel)]="rightOperand.value"
+        />
+      </ng-container>
     } @else {
       <input
         [type]="getOperandType()"
@@ -36,18 +40,23 @@
   <label class="input w-full">
     <span class="label">{{ camelCaseToWords(rightOperand.name) }}</span>
     @if (rightOperand.const) {
-      <input [type]="getOperandType()" class="input input-bordered w-full" [(ngModel)]="rightOperand.const" disabled />
+      <input [type]="getOperandType()" class="w-full" [(ngModel)]="rightOperand.const" disabled />
     } @else if (rightOperand.pattern) {
-      <input
-        [type]="getOperandType()"
-        class="input input-bordered w-full"
-        required
-        [pattern]="rightOperand.pattern"
-        [(ngModel)]="rightOperand.value"
-      />
+      <ng-container [formGroup]="parentFormGroup">
+        <input
+          [type]="getOperandType()"
+          class="w-full"
+          required
+          [pattern]="rightOperand.pattern"
+          [formControlName]="uuid"
+          [(ngModel)]="rightOperand.value"
+        />
+      </ng-container>
     } @else {
-      <input [type]="getOperandType()" class="input input-bordered w-full" required [(ngModel)]="rightOperand.value" />
+      <input [type]="getOperandType()" class="w-full" required [(ngModel)]="rightOperand.value" />
     }
   </label>
+}
+@if (rightOperand.pattern && parentFormGroup.get(uuid)?.invalid) {
   <p class="fieldset-label text-error pl-2">Does not match pattern: {{ rightOperand.pattern }}</p>
 }

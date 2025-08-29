@@ -22,11 +22,11 @@
   <h1 class="text-xl text-center divider my-0 2xl:col-span-2">Atomic Constraint</h1>
 
   <fieldset class="fieldset bg-base-300 border-base-300 rounded-box w-5xl border p-4">
-    <legend class="fieldset-legend text-sm">Left Operand</legend>
+    <legend class="fieldset-legend text-sm justify-start w-full">Left Operand</legend>
     <input type="text" class="input input-bordered w-full" [(ngModel)]="constraint.leftOperand" [disabled]="true" />
   </fieldset>
   <fieldset class="fieldset bg-base-300 border-base-300 rounded-box w-5xl border p-4">
-    <legend class="fieldset-legend text-sm">Left Operand</legend>
+    <legend class="fieldset-legend text-sm justify-start w-full"><span>Operator</span></legend>
     <select
       class="select select-bordered w-full"
       [(ngModel)]="constraint.selectedOperator"
@@ -37,16 +37,17 @@
       }
     </select>
   </fieldset>
-  <fieldset class="fieldset w-5xl bg-base-300 border border-base-300 p-4 rounded-box">
-    <legend class="fieldset-legend text-sm">Right Operand</legend>
+  <fieldset class="fieldset w-5xl bg-base-300 border border-base-300 p-4 rounded-box" [formGroup]="form">
+    <legend class="fieldset-legend text-sm justify-start w-full">Right Operand</legend>
     @if (rightOperand) {
-      <app-right-operand [rightOperand]="rightOperand"></app-right-operand>
+      <app-right-operand [rightOperand]="rightOperand" [parentFormGroup]="form"></app-right-operand>
     } @else if (rightOperands) {
       @for (item of rightOperands; let i = $index; track item.name) {
         <app-right-operand
           [rightOperand]="item"
           [selectTypes]="getRightOperands()"
           (changed)="onRightOperandChange($event, i)"
+          [parentFormGroup]="form"
         ></app-right-operand>
       }
       <div class="divider my-1"></div>
@@ -58,7 +59,7 @@
   </fieldset>
 
   <div class="divider my-0"></div>
-  <button type="button" class="btn btn-lg btn-primary" (click)="save.emit(constraint)">
+  <button type="button" class="btn btn-lg btn-primary" (click)="save.emit(constraint)" [disabled]="form.invalid">
     <span class="material-symbols-rounded">save</span>
     Save Atomic Constraint
   </button>

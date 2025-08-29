@@ -19,7 +19,7 @@
  ******************************************************************************/
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AtomicConstraint, camelCaseToWords, RightOperand } from '../../../../../../models/policy';
 import { RightOperandComponent } from './right-operand.component';
 
@@ -28,12 +28,14 @@ import { RightOperandComponent } from './right-operand.component';
   templateUrl: './atomic.constraint.component.html',
   styleUrls: [],
   standalone: true,
-  imports: [FormsModule, RightOperandComponent],
+  imports: [FormsModule, RightOperandComponent, ReactiveFormsModule],
 })
 export class AtomicConstraintComponent implements OnInit {
   @Input() constraint!: AtomicConstraint;
   rightOperand?: RightOperand;
   rightOperands?: RightOperand[];
+
+  form = new FormGroup({});
 
   @Output() save = new EventEmitter<AtomicConstraint>();
 
@@ -59,7 +61,7 @@ export class AtomicConstraintComponent implements OnInit {
 
   addOperand(): void {
     if (Array.isArray(this.constraint.rightOperand)) {
-      this.rightOperands?.push(this.constraint.rightOperand[0]);
+      this.rightOperands?.push(structuredClone(this.constraint.rightOperand[0]));
     }
   }
 
