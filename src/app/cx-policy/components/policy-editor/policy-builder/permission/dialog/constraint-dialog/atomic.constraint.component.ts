@@ -18,25 +18,48 @@
  * SPDX-License-Identifier: Apache-2.0
  ******************************************************************************/
 
-import { NgFor } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AtomicConstraint, camelCaseToWords, RightOperand } from '../../../../models/policy';
+import { AtomicConstraint, camelCaseToWords, RightOperand } from '../../../../../../models/policy';
+import { RightOperandComponent } from './right-operand.component';
 
 @Component({
   selector: 'app-atomic-constraint',
   templateUrl: './atomic.constraint.component.html',
   styleUrls: [],
   standalone: true,
-  imports: [FormsModule, NgFor],
+  imports: [FormsModule, RightOperandComponent],
 })
 export class AtomicConstraintComponent implements OnInit {
   @Input() constraint!: AtomicConstraint;
   rightOperand?: RightOperand;
+  rightOperands?: RightOperand[];
+
+  @Output() save = new EventEmitter<AtomicConstraint>();
 
   ngOnInit() {
-    if (!Array.isArray(this.constraint.rightOperandValue)) {
-      this.rightOperand = this.constraint.rightOperandValue as RightOperand;
+    if (Array.isArray(this.constraint.rightOperandValue)) {
+      this.rightOperands = this.constraint.rightOperandValue;
+    } else {
+      this.rightOperand = this.constraint.rightOperandValue;
+    }
+  }
+
+  getRightOperands(): RightOperand[] {
+    return this.constraint.rightOperand as RightOperand[];
+  }
+
+  onRightOperandChange(op: RightOperand, index: number) {
+    if (this.rightOperands) {
+      this.rightOperands[index] = op;
+    } else {
+      this.rightOperand = op;
+    }
+  }
+
+  addOperand(): void {
+    if (Array.isArray(this.constraint.rightOperand)) {
+      this.rightOperands?.push(this.constraint.rightOperand[0]);
     }
   }
 

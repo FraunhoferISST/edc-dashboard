@@ -1,0 +1,53 @@
+@if (selectTypes && selectTypes.length > 1) {
+  <div class="join w-full">
+    <label class="join-item input w-fit">
+      <span class="label">Type</span>
+      <select [(ngModel)]="rightOperand" (ngModelChange)="changed.emit($event)">
+        @for (type of selectTypes; track type.name) {
+          <option [ngValue]="type">{{ camelCaseToWords(type.name) }}</option>
+        }
+      </select>
+    </label>
+    @if (rightOperand.const) {
+      <input
+        [type]="getOperandType()"
+        class="join-item input input-bordered w-full"
+        [(ngModel)]="rightOperand.const"
+        disabled
+      />
+    } @else if (rightOperand.pattern) {
+      <input
+        [type]="getOperandType()"
+        class="join-item input input-bordered w-full"
+        required
+        [pattern]="rightOperand.pattern"
+        [(ngModel)]="rightOperand.value"
+      />
+    } @else {
+      <input
+        [type]="getOperandType()"
+        class="join-item input input-bordered w-full"
+        required
+        [(ngModel)]="rightOperand.value"
+      />
+    }
+  </div>
+} @else {
+  <label class="input w-full">
+    <span class="label">{{ camelCaseToWords(rightOperand.name) }}</span>
+    @if (rightOperand.const) {
+      <input [type]="getOperandType()" class="input input-bordered w-full" [(ngModel)]="rightOperand.const" disabled />
+    } @else if (rightOperand.pattern) {
+      <input
+        [type]="getOperandType()"
+        class="input input-bordered w-full"
+        required
+        [pattern]="rightOperand.pattern"
+        [(ngModel)]="rightOperand.value"
+      />
+    } @else {
+      <input [type]="getOperandType()" class="input input-bordered w-full" required [(ngModel)]="rightOperand.value" />
+    }
+  </label>
+  <p class="fieldset-label text-error pl-2">Does not match pattern: {{ rightOperand.pattern }}</p>
+}

@@ -29,7 +29,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { PolicyService } from '../../../../services/policy.service';
 import { ModalAndAlertService } from '@eclipse-edc/dashboard-core';
-import { ConstraintDialogComponent } from './dialog/constraint-dialog/constraint-dialog.component';
+import { AtomicConstraintComponent } from './dialog/constraint-dialog/atomic.constraint.component';
 
 @Component({
   selector: 'app-permission',
@@ -92,14 +92,15 @@ export class PermissionComponent {
     };
     if (constraint instanceof AtomicConstraint) {
       this.modalService.openModal(
-        ConstraintDialogComponent,
+        AtomicConstraintComponent,
         {
-          constraint: constraint,
+          constraint: constraint.clone(),
         },
         {
-          canceled: () => this.modalService.closeModal(),
           save: onResult,
         },
+        undefined,
+        () => this.modalService.closeModal(),
       );
     } else if (constraint instanceof LogicalConstraint) {
       onResult(constraint);
@@ -117,7 +118,5 @@ export class PermissionComponent {
     }
   }
 
-  protected readonly AtomicConstraint = AtomicConstraint;
-  protected readonly LogicalConstraint = LogicalConstraint;
   protected readonly camelCaseToWords = camelCaseToWords;
 }

@@ -112,6 +112,8 @@ export class AtomicConstraint implements Constraint {
     cloned.contexts = this.contexts;
     cloned.label = this.label;
     cloned.prefixes = this.prefixes;
+    cloned.rightOperandValue = this.rightOperandValue;
+    cloned.selectedOperator = this.selectedOperator;
     return cloned;
   }
 
@@ -157,10 +159,11 @@ export class AtomicConstraint implements Constraint {
 
   prettyRightOperandValue(): string | number {
     const mapped = this.mapRightOperand();
+    const addQuotes = (x: string | number) => (typeof x === 'string' ? `"${x}"` : x);
     if (Array.isArray(mapped)) {
-      return mapped.map(String).join(', ');
+      return mapped.map(addQuotes).join(', ');
     } else {
-      return mapped;
+      return addQuotes(mapped);
     }
   }
 
