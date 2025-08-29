@@ -19,7 +19,13 @@
  ******************************************************************************/
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AtomicConstraint, Constraint, LogicalConstraint, Permission } from '../../../../models/policy';
+import {
+  AtomicConstraint,
+  camelCaseToWords,
+  Constraint,
+  LogicalConstraint,
+  Permission,
+} from '../../../../models/policy';
 import { FormsModule } from '@angular/forms';
 import { PolicyService } from '../../../../services/policy.service';
 import { ModalAndAlertService } from '@eclipse-edc/dashboard-core';
@@ -113,4 +119,5 @@ export class PermissionComponent {
 
   protected readonly AtomicConstraint = AtomicConstraint;
   protected readonly LogicalConstraint = LogicalConstraint;
+  protected readonly camelCaseToWords = camelCaseToWords;
 }

@@ -142,13 +142,37 @@ export class AtomicConstraint implements Constraint {
     return this;
   }
 
+  mapRightOperand(): string | number | (string | number)[] {
+    const operandToValue = (operand: RightOperand): string | number => {
+      if (operand.const) return operand.const;
+      if (operand.value) return operand.value;
+      return '';
+    };
+    if (Array.isArray(this.rightOperandValue)) {
+      return this.rightOperandValue.map(x => operandToValue(x));
+    } else {
+      return operandToValue(this.rightOperandValue);
+    }
+  }
+
+  prettyRightOperandValue(): string | number {
+    const mapped = this.mapRightOperand();
+    if (Array.isArray(mapped)) {
+      return mapped.map(String).join(', ');
+    } else {
+      return mapped;
+    }
+  }
+
   toString() {
-    return `Constraint ${this.leftOperand} ${this.operator.toString()} ${
-      this.rightOperand != null ? this.rightOperand.toString() : ''
-    }`;
+    return `Constraint ${camelCaseToWords(this.leftOperand)} - ${camelCaseToWords(this.selectedOperator.toString(), true)} - ${this.prettyRightOperandValue()}`;
   }
 }
 
+export function camelCaseToWords(str: string, upperCase?: boolean): string {
+  const result = str.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return upperCase ? result.toUpperCase() : result;
+}
 export enum LogicalOperator {
   And = 'And',
   Or = 'Or',

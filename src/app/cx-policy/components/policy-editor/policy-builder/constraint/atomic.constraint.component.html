@@ -24,12 +24,7 @@
       <label class="label">
         <span class="label-text">Left Operand</span>
       </label>
-      <input
-        type="text"
-        class="input input-bordered w-full"
-        [(ngModel)]="constraint.leftOperand"
-        [disabled]="true"
-      />
+      <input type="text" class="input input-bordered w-full" [(ngModel)]="constraint.leftOperand" [disabled]="true" />
     </div>
   </div>
   <div class="form-control w-full">
@@ -41,9 +36,9 @@
       [(ngModel)]="constraint.selectedOperator"
       [disabled]="constraint.operator.length === 1"
     >
-      <option *ngFor="let operator of constraint.operator" [ngValue]="operator">
-        {{ operator }}
-      </option>
+      @for (operator of constraint.operator; track operator) {
+        <option [value]="operator">{{ camelCaseToWords(operator, true) }}</option>
+      }
     </select>
   </div>
 
@@ -56,11 +51,12 @@
         @if (rightOperand.const) {
           <input type="text" class="input input-bordered w-full" [(ngModel)]="rightOperand.const" disabled />
         } @else if (rightOperand.pattern) {
-          <input type="text"
-                 class="input input-bordered w-full validator"
-                 required
-                 [pattern]="rightOperand.pattern"
-                 [(ngModel)]="rightOperand.value"
+          <input
+            type="text"
+            class="input input-bordered w-full validator"
+            required
+            [pattern]="rightOperand.pattern"
+            [(ngModel)]="rightOperand.value"
           />
           <p class="validator-hint">Does not match pattern: {{ rightOperand.pattern }}</p>
         } @else {

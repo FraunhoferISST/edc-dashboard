@@ -27,11 +27,9 @@ import {
   LogicalConstraint,
   Permission,
   PolicyConfiguration,
-  RightOperand,
 } from '../../models/policy';
 import { JsonLdFormatter } from '../format.service';
 import { PolicyService } from '../policy.service';
-import { RightOperands } from '../atomic-constraints';
 
 const CONTEXTS = ['http://www.w3.org/ns/odrl.jsonld'];
 const NESTED_CONTEXT = { '@vocab': 'https://w3id.org/edc/v0.0.1/ns/' };
@@ -94,7 +92,7 @@ export class PlainFormatter implements JsonLdFormatter {
       return {
         leftOperand,
         operator: constraint.selectedOperator.toString(),
-        rightOperand: this.mapRightOperand(constraint),
+        rightOperand: constraint.mapRightOperand(),
       };
     } else if (constraint instanceof LogicalConstraint) {
       const obj: any = {};
@@ -103,18 +101,5 @@ export class PlainFormatter implements JsonLdFormatter {
     }
 
     return {};
-  }
-
-  mapRightOperand(constraint: AtomicConstraint): string | number | object | undefined {
-    const operandToValue = (operand: RightOperand): string | number => {
-      if (operand.const) return operand.const;
-      if (operand.value) return operand.value;
-      return '';
-    };
-    if (Array.isArray(constraint.rightOperandValue)) {
-      return constraint.rightOperandValue.map(x => operandToValue(x));
-    } else {
-      return operandToValue(constraint.rightOperandValue as RightOperand);
-    }
   }
 }

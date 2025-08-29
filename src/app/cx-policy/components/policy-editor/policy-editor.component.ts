@@ -66,6 +66,7 @@ export class PolicyEditorComponent {
       this.templates = PolicyTemplates.AccessTemplates();
     }
     this.currentTemplate = this.templates[0];
+    this.updateJsonText(this.currentTemplate, this.currentFormat);
   }
 
   onConfigSelectionChange(cfg: PolicyConfiguration) {

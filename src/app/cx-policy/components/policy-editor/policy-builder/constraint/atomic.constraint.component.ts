@@ -21,7 +21,7 @@
 import { NgFor } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AtomicConstraint, RightOperand } from '../../../../models/policy';
+import { AtomicConstraint, camelCaseToWords, RightOperand } from '../../../../models/policy';
 
 @Component({
   selector: 'app-atomic-constraint',
@@ -39,4 +39,6 @@ export class AtomicConstraintComponent implements OnInit {
       this.rightOperand = this.constraint.rightOperandValue as RightOperand;
     }
   }
+
+  protected readonly camelCaseToWords = camelCaseToWords;
 }

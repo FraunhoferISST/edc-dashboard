@@ -1,5 +1,13 @@
 // atomic-constraints.ts
-import { Action, AtomicConstraint, Constraint, Permission, PolicyConfiguration, RightOperand } from '../models/policy';
+import {
+  Action,
+  AtomicConstraint,
+  camelCaseToWords,
+  Constraint,
+  Permission,
+  PolicyConfiguration,
+  RightOperand,
+} from '../models/policy';
 
 export class RightOperands {
   static DataProvisioningEndDurationDays(): RightOperand {
@@ -1418,10 +1426,10 @@ export class PolicyTemplates {
   static AccessTemplates(): PolicyConfiguration[] {
     return RuleSets.AccessPermissions().map((constraint: Constraint) => {
       const atomic = constraint as AtomicConstraint;
-      const name = `Permission - ${atomic.leftOperand}`;
+      const name = `Permission - ${camelCaseToWords(atomic.leftOperand)}`;
       const template = new PolicyConfiguration(name);
       const permission = new Permission();
-      permission.name = atomic.leftOperand;
+      permission.name = camelCaseToWords(atomic.leftOperand);
       permission.action = Action.Access;
       permission.constraints.push(constraint);
       template.policy.permissions.push(permission);
@@ -1433,30 +1441,30 @@ export class PolicyTemplates {
   static UsageTemplates(): PolicyConfiguration[] {
     const permissions = RuleSets.UsagePermissions().map((constraint: Constraint) => {
       const atomic = constraint as AtomicConstraint;
-      const name = `Permission - ${atomic.leftOperand}`;
+      const name = `Permission - ${camelCaseToWords(atomic.leftOperand)}`;
       const template = new PolicyConfiguration(name);
       const permission = new Permission();
-      permission.name = atomic.leftOperand;
+      permission.name = camelCaseToWords(atomic.leftOperand);
       permission.constraints.push(constraint);
       template.policy.permissions.push(permission);
       return template;
     });
     const obligations = RuleSets.UsageObligations().map((constraint: Constraint) => {
       const atomic = constraint as AtomicConstraint;
-      const name = `Obligation - ${atomic.leftOperand}`;
+      const name = `Obligation - ${camelCaseToWords(atomic.leftOperand)}`;
       const template = new PolicyConfiguration(name);
       const permission = new Permission();
-      permission.name = atomic.leftOperand;
+      permission.name = camelCaseToWords(atomic.leftOperand);
       permission.constraints.push(constraint);
       template.policy.obligations.push(permission);
       return template;
     });
     const prohibitions = RuleSets.UsageProhibitions().map((constraint: Constraint) => {
       const atomic = constraint as AtomicConstraint;
-      const name = `Prohibition - ${atomic.leftOperand}`;
+      const name = `Prohibition - ${camelCaseToWords(atomic.leftOperand)}`;
       const template = new PolicyConfiguration(name);
       const permission = new Permission();
-      permission.name = atomic.leftOperand;
+      permission.name = camelCaseToWords(atomic.leftOperand);
       permission.constraints.push(constraint);
       template.policy.prohibitions.push(permission);
       return template;

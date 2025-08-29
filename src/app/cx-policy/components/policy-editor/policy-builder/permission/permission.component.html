@@ -35,7 +35,7 @@
       >
         @for (constraint of constraints; track constraint) {
           <li (click)="addConstraint(constraint.clone())">
-            <a class="truncate">{{ constraint.leftOperand }}</a>
+            <a class="truncate">{{ camelCaseToWords(constraint.leftOperand) }}</a>
           </li>
         }
       </ul>
