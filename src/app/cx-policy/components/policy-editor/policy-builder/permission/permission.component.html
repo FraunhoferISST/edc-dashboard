@@ -54,7 +54,7 @@
           <div class="text-md font-normal">{{ constraint.toString().replace('Constraint ', '') }}</div>
         </div>
         @if (getConstraintType(constraint) === 'atomic') {
-          <button class="btn btn-sm btn-square btn-soft btn-info" (click)="editConstraint(constraint)">
+          <button class="btn btn-sm btn-square btn-soft btn-secondary" (click)="editConstraint(constraint)">
             <span class="material-symbols-rounded !text-[1.2rem]">edit</span>
           </button>
         } @else {
@@ -88,7 +88,7 @@
                   <div class="text-md font-normal">{{ subconstraint.toString().replace('Constraint ', '') }}</div>
                 </div>
                 <button
-                  class="btn btn-sm btn-square btn-soft btn-info"
+                  class="btn btn-sm btn-square btn-soft btn-secondary"
                   (click)="editConstraint(subconstraint, false, constraint)"
                 >
                   <span class="material-symbols-rounded !text-[1.2rem]">edit</span>

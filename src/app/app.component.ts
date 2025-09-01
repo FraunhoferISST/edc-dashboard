@@ -26,19 +26,7 @@ import { AppConfig } from '../../projects/dashboard-core/src/lib/models/app-conf
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  protected readonly themes = [
-    'light',
-    'dark',
-    'dim',
-    'aqua',
-    'nord',
-    'synthwave',
-    'forest',
-    'dracula',
-    'night',
-    'coffee',
-    'emerald',
-  ];
+  protected readonly themes = ['Dark', 'Light'];
   edcConfigs?: Promise<EdcConfig[]>;
   appConfig?: Promise<AppConfig>;
 

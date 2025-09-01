@@ -90,7 +90,7 @@
           @for (kind of ['permissions', 'obligations', 'prohibitions']; track kind) {
             <p class="text-xl capitalize text-base-content mt-2">{{ kind }}</p>
             @for (permission of getPolicyPermission(kind); track permission.name) {
-              <div class="[&_a]:link [&_a]:link-primary">
+              <div class="[&_a]:link [&_a]:link-secondary">
                 <p>Name: {{ permission.name }}</p>
                 @for (constraint of getAtomicConstraints(permission.constraints); track constraint.leftOperand) {
                   <div>
@@ -98,9 +98,7 @@
                     @for (operand of getRightOperandArray(constraint.rightOperandValue); track operand.name) {
                       <div>
                         <span>Right Operand: </span>
-                        <span class="text-base-content/50 font-semibold italic">{{
-                          camelCaseToWords(operand.name)
-                        }}</span>
+                        <span class="font-thin text-primary">{{ camelCaseToWords(operand.name) }}</span>
                         <div>
                           @switch (kind) {
                             @case ('permissions') {
