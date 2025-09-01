@@ -104,10 +104,15 @@ export class PolicyEditorComponent {
   }
 
   getRightOperandArray(operand: RightOperand | RightOperand[]): RightOperand[] {
-    if (Array.isArray(operand)) {
-      return operand;
-    }
-    return [operand];
+    const arr = Array.isArray(operand) ? operand : [operand];
+    const seen = new Set<string>();
+    return arr.filter(op => {
+      if (seen.has(op.name)) {
+        return false;
+      }
+      seen.add(op.name);
+      return true;
+    });
   }
 
   protected readonly Action = Action;

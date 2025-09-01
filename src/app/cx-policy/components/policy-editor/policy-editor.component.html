@@ -90,7 +90,7 @@
           @for (kind of ['permissions', 'obligations', 'prohibitions']; track kind) {
             <p class="text-xl capitalize text-base-content mt-2">{{ kind }}</p>
             @for (permission of getPolicyPermission(kind); track permission.name) {
-              <div>
+              <div class="[&_a]:link [&_a]:link-primary">
                 <p>Name: {{ permission.name }}</p>
                 @for (constraint of getAtomicConstraints(permission.constraints); track constraint.leftOperand) {
                   <div>
@@ -102,25 +102,23 @@
                           camelCaseToWords(operand.name)
                         }}</span>
                         <div>
-                          <p class="text-base-content">
-                            @switch (kind) {
-                              @case ('permissions') {
-                                @if (operand.legalText?.permission) {
-                                  {{ operand.legalText!.permission! }}
-                                }
-                              }
-                              @case ('obligations') {
-                                @if (operand.legalText?.obligation) {
-                                  {{ operand.legalText!.obligation! }}
-                                }
-                              }
-                              @case ('prohibitions') {
-                                @if (operand.legalText?.prohibition) {
-                                  {{ operand.legalText!.prohibition! }}
-                                }
+                          @switch (kind) {
+                            @case ('permissions') {
+                              @if (operand.legalText?.permission) {
+                                <p class="text-base-content" [innerHTML]="operand.legalText!.permission!"></p>
                               }
                             }
-                          </p>
+                            @case ('obligations') {
+                              @if (operand.legalText?.obligation) {
+                                <p class="text-base-content" [innerHTML]="operand.legalText!.obligation!"></p>
+                              }
+                            }
+                            @case ('prohibitions') {
+                              @if (operand.legalText?.prohibition) {
+                                <p class="text-base-content" [innerHTML]="operand.legalText!.prohibition!"></p>
+                              }
+                            }
+                          }
                           @if (operand.legalText?.additionalInformation) {
                             <div>
                               <span>Additional Information: </span>
