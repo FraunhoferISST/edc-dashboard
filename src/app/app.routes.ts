@@ -18,7 +18,7 @@ import { PolicyEditorComponent } from './cx-policy/components/policy-editor/poli
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'policy-builder',
     pathMatch: 'full',
   },
   {
