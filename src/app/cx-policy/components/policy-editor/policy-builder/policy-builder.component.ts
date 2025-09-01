@@ -42,24 +42,26 @@ export class PolicyBuilderComponent {
   get policyConfig() {
     return this._policyConfig;
   }
-
   set policyConfig(cfg: PolicyConfiguration) {
     this._policyConfig = cfg;
-    if (cfg.policy.permissions.length > 0) {
-      this.currentPermission = cfg.policy.permissions[0];
-      this.changeConstraintTemplates('Permission');
-    } else if (cfg.policy.obligations.length > 0) {
-      this.currentPermission = cfg.policy.obligations[0];
-      this.changeConstraintTemplates('Obligation');
-    } else if (cfg.policy.prohibitions.length > 0) {
-      this.currentPermission = cfg.policy.prohibitions[0];
-      this.changeConstraintTemplates('Prohibition');
-    } else {
-      this.currentPermission = undefined;
-    }
+    this.currentPermission = this._selectFirstRule();
   }
 
   @Output() policyChange = new EventEmitter<PolicyConfiguration>();
+
+  private _selectFirstRule(): Permission | undefined {
+    if (this.policyConfig.policy.permissions.length > 0) {
+      this.changeConstraintTemplates('Permission');
+      return this.policyConfig.policy.permissions[0];
+    } else if (this.policyConfig.policy.obligations.length > 0) {
+      this.changeConstraintTemplates('Obligation');
+      return this.policyConfig.policy.obligations[0];
+    } else if (this.policyConfig.policy.prohibitions.length > 0) {
+      this.changeConstraintTemplates('Prohibition');
+      return this.policyConfig.policy.prohibitions[0];
+    }
+    return undefined;
+  }
 
   changeConstraintTemplates(ruleType: RuleType) {
     switch (this.policyConfig.policy.type) {
@@ -127,13 +129,13 @@ export class PolicyBuilderComponent {
     if (target == this.currentPermission) {
       switch (ruleType) {
         case 'Permission':
-          this.currentPermission = this.policyConfig.policy.permissions[0] ?? undefined;
+          this.currentPermission = this.policyConfig.policy.permissions[0] ?? this._selectFirstRule();
           break;
         case 'Obligation':
-          this.currentPermission = this.policyConfig.policy.obligations[0] ?? undefined;
+          this.currentPermission = this.policyConfig.policy.obligations[0] ?? this._selectFirstRule();
           break;
         case 'Prohibition':
-          this.currentPermission = this.policyConfig.policy.prohibitions[0] ?? undefined;
+          this.currentPermission = this.policyConfig.policy.prohibitions[0] ?? this._selectFirstRule();
           break;
       }
     }

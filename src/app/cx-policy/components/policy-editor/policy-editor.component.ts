@@ -20,12 +20,21 @@
 
 import { Component } from '@angular/core';
 import { PolicyBuilderComponent } from './policy-builder/policy-builder.component';
-import { Action, OutputKind, PolicyConfiguration } from '../../models/policy';
+import {
+  Action,
+  OutputKind,
+  PolicyConfiguration,
+  Permission,
+  Policy,
+  Constraint,
+  AtomicConstraint,
+  camelCaseToWords,
+  RightOperand,
+} from '../../models/policy';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { FormatService } from '../../services/format.service';
 import { PolicyService } from '../../services/policy.service';
-import { ModalAndAlertService } from '@eclipse-edc/dashboard-core';
 import { PolicyTemplates } from '../../services/atomic-constraints';
 
 @Component({
@@ -45,10 +54,11 @@ export class PolicyEditorComponent {
   currentFormat: OutputKind;
   currentTemplate: PolicyConfiguration;
 
+  showLegalText = true;
+
   constructor(
     public formatService: FormatService,
     public policyService: PolicyService,
-    readonly modalService: ModalAndAlertService,
   ) {
     this.currentFormat = OutputKind.Plain;
     this.templates = PolicyTemplates.UsageTemplates();
@@ -85,5 +95,21 @@ export class PolicyEditorComponent {
     await navigator.clipboard.writeText(this.text);
   }
 
+  getPolicyPermission(kind: string): Permission[] {
+    return this.currentTemplate.policy[kind as keyof Policy] as Permission[];
+  }
+
+  getAtomicConstraints(list: Constraint[]) {
+    return list as AtomicConstraint[];
+  }
+
+  getRightOperandArray(operand: RightOperand | RightOperand[]): RightOperand[] {
+    if (Array.isArray(operand)) {
+      return operand;
+    }
+    return [operand];
+  }
+
   protected readonly Action = Action;
+  protected readonly camelCaseToWords = camelCaseToWords;
 }

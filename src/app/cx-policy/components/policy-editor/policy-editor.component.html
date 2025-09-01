@@ -47,18 +47,102 @@
     </div>
   </div>
 
-  <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 mockup-code overflow-auto rounded-2xl shadow-xl">
+  <div class="xl:row-span-2 xl:col-start-3 xl:row-start-1 relative overflow-auto rounded-2xl shadow-xl bg-base-300">
+    <div
+      class="absolute top-4 right-4 z-10 tabs tabs-box shadow-md bg-base-100 [&_input]:checked:!bg-primary/8 [&_input]:checked:!text-primary [&_input]:hover:text-primary"
+    >
+      <div class="tooltip-left tooltip-primary tooltip" data-tip="Show legal information text of constraints.">
+        <input
+          type="radio"
+          name="contract-types"
+          class="tab"
+          aria-label="Legal Text"
+          [checked]="showLegalText"
+          (change)="showLegalText = true"
+        />
+      </div>
+      <div class="tooltip-left tooltip-primary tooltip" data-tip="Show JSONld policy definition.">
+        <input
+          type="radio"
+          name="contract-types"
+          class="tab"
+          aria-label="JSON-LD"
+          [checked]="!showLegalText"
+          (change)="showLegalText = false"
+        />
+      </div>
+    </div>
     <button
       tabindex="0"
-      class="btn btn-soft btn-primary fixed right-8 bottom-8"
+      class="btn btn-soft btn-primary fixed right-8 bottom-8 z-10 shadow-md"
       title="Copy to clipboard"
       (click)="copyPolicyToClipboard()"
     >
       <span class="material-symbols-rounded">content_copy</span>
-      Copy
+      Copy JSON-LD
     </button>
-    <ng-container *ngFor="let line of text.split('\n'); let i = index">
-      <pre [attr.data-prefix]="i + 1"><code>{{ line }}</code></pre>
-    </ng-container>
+    @if (showLegalText) {
+      <div class="w-full h-full p-6">
+        <p class="text-2xl">Legal Information</p>
+        <div
+          class="pl-2 pb-6 [&_div]:border-base-content/15 text-base-content/50 [&_div]:border-l-1 [&_div]:ml-1 [&_div]:pl-3"
+        >
+          @for (kind of ['permissions', 'obligations', 'prohibitions']; track kind) {
+            <p class="text-xl capitalize text-base-content mt-2">{{ kind }}</p>
+            @for (permission of getPolicyPermission(kind); track permission.name) {
+              <div>
+                <p>Name: {{ permission.name }}</p>
+                @for (constraint of getAtomicConstraints(permission.constraints); track constraint.leftOperand) {
+                  <div>
+                    <p>Constraint: {{ camelCaseToWords(constraint.leftOperand) }}</p>
+                    @for (operand of getRightOperandArray(constraint.rightOperandValue); track operand.name) {
+                      <div>
+                        <span>Right Operand: </span>
+                        <span class="text-base-content/50 font-semibold italic">{{
+                          camelCaseToWords(operand.name)
+                        }}</span>
+                        <div>
+                          <p class="text-base-content">
+                            @switch (kind) {
+                              @case ('permissions') {
+                                @if (operand.legalText?.permission) {
+                                  {{ operand.legalText!.permission! }}
+                                }
+                              }
+                              @case ('obligations') {
+                                @if (operand.legalText?.obligation) {
+                                  {{ operand.legalText!.obligation! }}
+                                }
+                              }
+                              @case ('prohibitions') {
+                                @if (operand.legalText?.prohibition) {
+                                  {{ operand.legalText!.prohibition! }}
+                                }
+                              }
+                            }
+                          </p>
+                          @if (operand.legalText?.additionalInformation) {
+                            <div>
+                              <span>Additional Information: </span>
+                              <span class="text-base-content">{{ operand.legalText!.additionalInformation! }}</span>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="mockup-code h-full overflow-auto">
+        <ng-container *ngFor="let line of text.split('\n'); let i = index">
+          <pre [attr.data-prefix]="i + 1"><code>{{ line }}</code></pre>
+        </ng-container>
+      </div>
+    }
   </div>
 </div>

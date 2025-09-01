@@ -74,7 +74,7 @@ export interface RightOperand {
     additionalInformation?: string;
   };
   const?: string | number;
-  pattern?: string;
+  pattern?: RegExp;
   value?: string | number;
 }
 

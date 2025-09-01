@@ -26,7 +26,7 @@ export class RightOperands {
     return {
       name: 'DataProvisioningEndDate',
       operandType: 'string',
-      pattern: '^(d{4}-d{2}-d{2}Td{2}:d{2}:d{2}(Z|[+-]d{2}:d{2}))$',
+      pattern: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/,
       legalText: {
         obligation:
           'The Data Provider shall make the Data available for a limited period until the end date specified herein, commencing from the second the Agreement is concluded via the Registered Connector (RC).',
@@ -60,7 +60,7 @@ export class RightOperands {
     return {
       name: 'BusinessPartnerNumber',
       operandType: 'string',
-      pattern: '^BPNL[0-9A-Z]{12}$',
+      pattern: /^BPNL[0-9A-Z]{12}$/,
       value: 'BPNL0000000001',
     };
   }
@@ -615,7 +615,7 @@ export class RightOperands {
     return {
       name: 'AffiliatesBpnl',
       operandType: 'string',
-      pattern: '^BPNL[0-9A-Z]{12}$',
+      pattern: /^BPNL[0-9A-Z]{12}$/,
       legalText: {
         permission:
           "The Data Provider permits the Data Consumer to make the Data available for use by the Affiliated companies within the meaning of Section 15 German Stock Corporation Act ('Affiliated Companies') ('Sublicensing') specified herein, provided that the Data Consumer ensures that such companies and/or its its Affiliated Companies comply with the terms of the Agreement concluded via the Registered Connector (RC).",
@@ -734,7 +734,7 @@ export class RightOperands {
     return {
       name: 'ManagedLegalEntityBpnl',
       operandType: 'string',
-      pattern: '^BPNL[0-9A-Z]{12}$',
+      pattern: /^BPNL[0-9A-Z]{12}$/,
       legalText: {
         permission:
           "The Data Provider permits the Data Consumer to make the Data available for use to the companies specified herein ('Sublicensing'), for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard CX-0074), provided that the Data Consumer ensures that such managed companies comply with the terms of the Agreement concluded via the Registered Connector (RC).",
@@ -1043,7 +1043,7 @@ export class RightOperands {
     return {
       name: 'DataUsageEndDate',
       operandType: 'string',
-      pattern: '^(d{4}-d{2}-d{2}Td{2}:d{2}:d{2}(Z|[+-]d{2}:d{2}))$',
+      pattern: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/,
       legalText: {
         permission:
           'The Data Provider shall make the Data available with a usage period permitted until the end date specified herein, in accordance with the usage conditions specified in cx-policy:UsagePurpose, commencing from the second the Agreement is concluded via the Registered Connector (RC). Upon expiry of the usage period, the Data Consumer shall no longer be entitled to use the Data and shall delete the Data in order to prevent any further Use, unless the Data Consumer has received the same Data under another still valid contract. The Agreement shall terminate upon expiry of the usage period of the Data without the need for a separate notice of termination.',
