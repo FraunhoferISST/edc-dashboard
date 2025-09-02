@@ -18,9 +18,8 @@ import { PolicyEditorComponent } from './cx-policy/components/policy-editor/poli
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'policy-builder',
-    pathMatch: 'full',
-  },
+    component: PolicyEditorComponent,
+  } /*,
   {
     path: 'home',
     loadComponent: () => import('@eclipse-edc/dashboard-core/home').then(m => m.HomeViewComponent),
@@ -54,5 +53,5 @@ export const routes: Routes = [
   {
     path: 'policy-builder',
     component: PolicyEditorComponent,
-  },
+  },*/,
 ];

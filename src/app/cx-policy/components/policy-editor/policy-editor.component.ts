@@ -55,6 +55,7 @@ export class PolicyEditorComponent {
   currentTemplate: PolicyConfiguration;
 
   showLegalText = true;
+  legalTextKinds: string[] = [];
 
   constructor(
     public formatService: FormatService,
@@ -62,10 +63,19 @@ export class PolicyEditorComponent {
   ) {
     this.currentFormat = OutputKind.Plain;
     this.templates = PolicyTemplates.UsageTemplates();
+    this.updateLegalTextKinds(Action.Use);
     this.currentTemplate = this.templates[0];
     this.outputFormats = policyService.supportedOutput();
 
     this.updateJsonText(this.currentTemplate, this.currentFormat);
+  }
+
+  updateLegalTextKinds(type: Action) {
+    if (type === 'use') {
+      this.legalTextKinds = ['permissions', 'obligations', 'prohibitions'];
+    } else {
+      this.legalTextKinds = ['permissions'];
+    }
   }
 
   onTypeChange(type: Action) {
@@ -76,6 +86,7 @@ export class PolicyEditorComponent {
       this.templates = PolicyTemplates.AccessTemplates();
     }
     this.currentTemplate = this.templates[0];
+    this.updateLegalTextKinds(type);
     this.updateJsonText(this.currentTemplate, this.currentFormat);
   }
 
