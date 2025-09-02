@@ -90,6 +90,7 @@ export class PolicyBuilderComponent {
 
   addRule(ruleType: RuleType) {
     const rule = new Permission(`New ${ruleType}`);
+    rule.action = this.policyConfig.policy.type;
     switch (ruleType) {
       case 'Permission':
         this.policyConfig.policy.permissions.push(rule);

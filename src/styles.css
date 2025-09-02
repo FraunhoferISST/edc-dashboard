@@ -20,10 +20,10 @@
 }
 
 @plugin "daisyui/theme" {
-  name: 'catena-x-dark';
+  name: 'Dark';
   default: false;
   prefersdark: true;
-  color-scheme: 'Dark';
+  color-scheme: 'dark';
   --color-base-100: oklch(25.857% 0.023 264.149);
   --color-base-200: oklch(23.036% 0.019 264.182);
   --color-base-300: oklch(21.346% 0.018 262.177);
