@@ -80,9 +80,17 @@ export class PlainFormatter implements JsonLdFormatter {
   }
 
   mapPermission(permission: Permission): object {
+    let constraint: Constraint[];
+    if (permission.constraints.length > 1) {
+      const logical = new LogicalConstraint();
+      permission.constraints.forEach(x => logical.constraints.push(x));
+      constraint = [logical];
+    } else {
+      constraint = permission.constraints;
+    }
     return {
       action: permission.action.toString(),
-      constraint: permission.constraints.map(this.mapConstraint.bind(this)),
+      constraint: constraint.map(x => this.mapConstraint(x)),
     };
   }
 

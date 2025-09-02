@@ -48,9 +48,10 @@
     @for (constraint of permission.constraints; track constraint) {
       <div class="w-full flex flex-wrap items-center gap-4 border-b-2 border-b-base-content/10 pb-3">
         <div class="flex flex-col flex-1">
-          <div class="text-xs font-normal opacity-60">
-            {{ constraint.constructor.name.slice(1).replace('Con', ' Con') }}
-          </div>
+          <div class="text-xs font-normal opacity-60">Atomic Constraint</div>
+          <!--          <div class="text-xs font-normal opacity-60">-->
+          <!--            {{ constraint.constructor.name.slice(1).replace('Con', ' Con') }}-->
+          <!--          </div>-->
           <div class="text-md font-normal">{{ constraint.toString().replace('Constraint ', '') }}</div>
         </div>
         @if (getConstraintType(constraint) === 'atomic') {
