@@ -6,7 +6,7 @@
     {
       "text": "Policy Builder",
       "materialSymbol": "build",
-      "routerPath": "policy-builder",
+      "routerPath": "",
       "viewDescription": "Catena-X ODRL Policy Builder"
     }
   ]
