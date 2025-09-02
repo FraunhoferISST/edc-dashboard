@@ -11,8 +11,10 @@ export class RightOperandComponent implements OnInit {
   @Input() rightOperand!: RightOperand;
   @Input() selectTypes?: RightOperand[];
   @Input() parentFormGroup!: FormGroup;
+  @Input() deleteButton = false;
 
   @Output() changed = new EventEmitter<RightOperand>();
+  @Output() deleted = new EventEmitter<RightOperand>();
 
   readonly uuid: string = crypto.randomUUID();
 

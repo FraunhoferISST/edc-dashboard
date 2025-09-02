@@ -59,10 +59,19 @@ export class AtomicConstraintComponent implements OnInit {
     }
   }
 
+  onRightOperandDelete(op: RightOperand) {
+    this.rightOperands = this.rightOperands?.filter(x => x !== op);
+  }
+
   addOperand(): void {
     if (Array.isArray(this.constraint.rightOperand)) {
       this.rightOperands?.push(structuredClone(this.constraint.rightOperand[0]));
     }
+  }
+
+  onSave(): void {
+    this.constraint.rightOperandValue = this.rightOperands ?? this.rightOperand!;
+    this.save.emit(this.constraint);
   }
 
   protected readonly camelCaseToWords = camelCaseToWords;

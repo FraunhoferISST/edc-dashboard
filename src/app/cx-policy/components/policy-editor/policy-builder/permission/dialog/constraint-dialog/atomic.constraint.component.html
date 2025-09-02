@@ -18,7 +18,7 @@
   SPDX-License-Identifier: Apache-2.0
   -->
 
-<div class="flex flex-col gap-y-4 items-center">
+<div class="flex flex-col gap-y-4 items-center h-full overflow-y-auto">
   <h1 class="text-xl text-center divider my-0 2xl:col-span-2">Atomic Constraint</h1>
 
   <fieldset class="fieldset bg-base-300 border-base-300 rounded-box w-5xl border p-4">
@@ -48,6 +48,8 @@
           [selectTypes]="getRightOperands()"
           (changed)="onRightOperandChange($event, i)"
           [parentFormGroup]="form"
+          [deleteButton]="i > 0"
+          (deleted)="onRightOperandDelete($event)"
         ></app-right-operand>
       }
       <div class="divider my-1"></div>
@@ -59,7 +61,7 @@
   </fieldset>
 
   <div class="divider my-0"></div>
-  <button type="button" class="btn btn-lg btn-primary w-fit" (click)="save.emit(constraint)" [disabled]="form.invalid">
+  <button type="button" class="btn btn-lg btn-primary w-fit" (click)="onSave()" [disabled]="form.invalid">
     <span class="material-symbols-rounded">save</span>
     Save Atomic Constraint
   </button>
