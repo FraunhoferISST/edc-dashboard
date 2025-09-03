@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Angular DEV Server" type="CompoundRunConfigurationType">
+    <toRun name="Angular CLI Server" type="js.build_tools.npm" />
+    <toRun name="Angular LIB Server" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "edc": "https://w3id.org/edc/v0.0.1/ns/"
+  },
+  "@type": "PolicyDefinition",
+  "policy": {
+    "@context": [
+      "https://w3id.org/catenax/2025/9/policy/context.jsonld",
+      "https://w3id.org/catenax/2025/9/policy/odrl.jsonld"
+    ],
+    "@type": "Set",
+    "@id": "8c2ff88a-74bf-41dd-9b35-9587a3b95adf",
+    "permission": [
+      {
+        "target": "http://example.com/asset:12345",
+        "action": "access",
+        "constraint": {
+          "leftOperand": "FrameworkAgreement",
+          "operator": "eq",
+          "rightOperand": "DataExchangeGovernance:2.0"
+        }
+      }
+    ]
+  }
+}
