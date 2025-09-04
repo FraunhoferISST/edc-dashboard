@@ -31,13 +31,13 @@ import {
 import { JsonLdFormatter } from '../format.service';
 import { PolicyService } from '../policy.service';
 
-const CONTEXTS = ['http://www.w3.org/ns/odrl.jsonld'];
+const CONTEXTS = ['http://www.w3.org/ns/odrl.jsonld', 'https://w3id.org/catenax/2025/9/policy/context.jsonld'];
 const NESTED_CONTEXT = { '@vocab': 'https://w3id.org/edc/v0.0.1/ns/' };
 
 export const policyRequestTemplate = {
   '@context': {},
   '@type': 'PolicyDefinition',
-  '@id': '{{POLICY_ID}}',
+  '@id': 'CHANGE-ME',
   policy: {},
 };
 

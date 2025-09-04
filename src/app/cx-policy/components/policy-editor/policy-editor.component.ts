@@ -18,33 +18,39 @@
  * SPDX-License-Identifier: Apache-2.0
  ******************************************************************************/
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PolicyBuilderComponent } from './policy-builder/policy-builder.component';
 import {
   Action,
-  OutputKind,
-  PolicyConfiguration,
-  Permission,
-  Policy,
-  Constraint,
   AtomicConstraint,
   camelCaseToWords,
+  Constraint,
+  OutputKind,
+  Permission,
+  Policy,
+  PolicyConfiguration,
   RightOperand,
 } from '../../models/policy';
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { AsyncPipe, NgFor } from '@angular/common';
 import { FormatService } from '../../services/format.service';
 import { PolicyService } from '../../services/policy.service';
 import { PolicyTemplates } from '../../services/atomic-constraints';
+import { DashboardStateService, EdcClientService } from '@eclipse-edc/dashboard-core';
+import { filter, finalize, firstValueFrom, Subject, take, takeUntil } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { JsonObject } from '@angular-devkit/core';
 
 @Component({
   selector: 'app-policy-editor',
   templateUrl: './policy-editor.component.html',
   styleUrls: ['./policy-editor.component.css'],
   standalone: true,
-  imports: [PolicyBuilderComponent, FormsModule, NgFor],
+  imports: [PolicyBuilderComponent, FormsModule, NgFor, AsyncPipe],
 })
-export class PolicyEditorComponent {
+export class PolicyEditorComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject<void>();
+
   text!: string;
 
   outputFormats: string[];
@@ -57,9 +63,17 @@ export class PolicyEditorComponent {
   showLegalText = true;
   legalTextKinds: string[] = [];
 
+  isValid = true;
+  validationLoading = false;
+  validationEndpointUrl = '';
+  validationErrorText?: string;
+
   constructor(
     public formatService: FormatService,
     public policyService: PolicyService,
+    public readonly edcClientService: EdcClientService,
+    private readonly stateService: DashboardStateService,
+    private http: HttpClient,
   ) {
     this.currentFormat = OutputKind.Plain;
     this.templates = PolicyTemplates.UsageTemplates();
@@ -67,7 +81,25 @@ export class PolicyEditorComponent {
     this.currentTemplate = this.templates[0];
     this.outputFormats = policyService.supportedOutput();
 
-    this.updateJsonText(this.currentTemplate, this.currentFormat);
+    stateService.currentEdcConfig$
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(x => x !== undefined),
+      )
+      .subscribe(config => {
+        this.validationEndpointUrl = config.managementUrl.concat('/v3/validation/policydefinition');
+      });
+
+    edcClientService.isHealthy$
+      .pipe(
+        filter(x => x),
+        take(1),
+      )
+      .subscribe(async () => await this._validatePolicy());
+  }
+
+  async ngOnInit() {
+    await this.updateJsonText(this.currentTemplate, this.currentFormat);
   }
 
   updateLegalTextKinds(type: Action) {
@@ -78,7 +110,7 @@ export class PolicyEditorComponent {
     }
   }
 
-  onTypeChange(type: Action) {
+  async onTypeChange(type: Action) {
     this.policyType = type;
     if (type === Action.Use) {
       this.templates = PolicyTemplates.UsageTemplates();
@@ -87,19 +119,44 @@ export class PolicyEditorComponent {
     }
     this.currentTemplate = this.templates[0];
     this.updateLegalTextKinds(type);
-    this.updateJsonText(this.currentTemplate, this.currentFormat);
+    await this.updateJsonText(this.currentTemplate, this.currentFormat);
   }
 
-  onConfigSelectionChange(cfg: PolicyConfiguration) {
-    this.updateJsonText(cfg, this.currentFormat);
-  }
-  onConfigChange(cfg: PolicyConfiguration) {
-    this.updateJsonText(cfg, this.currentFormat);
+  async onConfigSelectionChange(cfg: PolicyConfiguration) {
+    await this.updateJsonText(cfg, this.currentFormat);
   }
 
-  updateJsonText(cfg: PolicyConfiguration, format: OutputKind) {
+  async onConfigChange(cfg: PolicyConfiguration): Promise<void> {
+    await this.updateJsonText(cfg, this.currentFormat);
+  }
+
+  private async _validatePolicy(): Promise<void> {
+    if ((await firstValueFrom(this.edcClientService.isHealthy$)) && this.validationEndpointUrl) {
+      this.validationLoading = true;
+      this.http
+        .post<JsonObject>(this.validationEndpointUrl, JSON.parse(this.text))
+        .pipe(finalize(() => (this.validationLoading = false)))
+        .subscribe({
+          next: result => {
+            this.isValid = result['isValid'] as boolean;
+            if (result['errors']) {
+              this.validationErrorText = JSON.stringify(result['errors']);
+            } else {
+              this.validationErrorText = undefined;
+            }
+          },
+          error: err => {
+            this.isValid = false;
+            this.validationErrorText = err.error[0].message;
+          },
+        });
+    }
+  }
+
+  async updateJsonText(cfg: PolicyConfiguration, format: OutputKind) {
     const ld = this.formatService.toJsonLd(cfg, format);
     this.text = this.formatService.formatPolicy(ld);
+    await this._validatePolicy();
   }
 
   async copyPolicyToClipboard(): Promise<void> {
@@ -124,6 +181,11 @@ export class PolicyEditorComponent {
       seen.add(op.name);
       return true;
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   protected readonly Action = Action;
