@@ -1,5 +1,5 @@
 {
-  "healthCheckIntervalSeconds": 3000,
+  "healthCheckIntervalSeconds": 60,
   "enableUserConfig": false,
   "appTitle": "Catena-X Policy Builder",
   "menuItems": [
