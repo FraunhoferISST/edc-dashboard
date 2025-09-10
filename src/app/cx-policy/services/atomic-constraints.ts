@@ -1241,9 +1241,7 @@ export class RuleSets {
 
   static UsagePermissions(): AtomicConstraint[] {
     return [
-      AtomicConstraints.FrameworkAgreementConstraint(),
       AtomicConstraints.MembershipConstraint(),
-      AtomicConstraints.UsagePurposeConstraint(),
       AtomicConstraints.ContractReferenceConstraint(),
       AtomicConstraints.AffiliatesRegionConstraint(),
       AtomicConstraints.AffiliatesBpnlConstraint1(),
@@ -1329,6 +1327,18 @@ export class PolicyTemplates {
       template.policy.prohibitions.push(permission);
       return template;
     });
-    return [...permissions, ...obligations, ...prohibitions];
+    const templates = [...permissions, ...obligations, ...prohibitions];
+    this._addAgreementAndPurpose(templates);
+    return templates;
+  }
+
+  private static _addAgreementAndPurpose(configs: PolicyConfiguration[]): void {
+    const permission = new Permission();
+    permission.name = 'Usage Base';
+    permission.constraints.push(
+      AtomicConstraints.UsagePurposeConstraint(),
+      AtomicConstraints.FrameworkAgreementConstraint(),
+    );
+    configs.forEach(config => config.policy.permissions.push(permission));
   }
 }
