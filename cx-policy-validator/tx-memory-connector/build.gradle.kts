@@ -1,6 +1,10 @@
 group = "de.fraunhofer.isst.dst.cx.validator"
 version = "0.0.1"
 
+val edcVersion = "0.14.0"
+val txVersion = "0.11.0-RC2"
+
+
 plugins {
   java
   application
@@ -12,13 +16,13 @@ repositories {
 }
 
 dependencies {
-  implementation("org.eclipse.edc:controlplane-dcp-bom:0.14.0")
-  implementation("org.eclipse.edc:jersey-providers-lib:0.14.0")
-  implementation("org.eclipse.edc:management-api-lib:0.14.0")
-  implementation("org.eclipse.tractusx.edc:cx-policy:0.11.0-RC1")
-  implementation("org.eclipse.tractusx.edc:bpn-validation-core:0.11.0-RC1")
-  implementation("org.eclipse.tractusx.edc:bdrs-client:0.11.0-RC1")
-  implementation("org.eclipse.tractusx.edc:json-ld-core:0.11.0-RC1")
+  implementation("org.eclipse.edc:controlplane-dcp-bom:${edcVersion}")
+  implementation("org.eclipse.edc:jersey-providers-lib:${edcVersion}")
+  implementation("org.eclipse.edc:management-api-lib:${edcVersion}")
+  implementation("org.eclipse.tractusx.edc:cx-policy:${txVersion}")
+  implementation("org.eclipse.tractusx.edc:bpn-validation-core:${txVersion}")
+  implementation("org.eclipse.tractusx.edc:bdrs-client:${txVersion}")
+  implementation("org.eclipse.tractusx.edc:json-ld-core:${txVersion}")
 }
 
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
