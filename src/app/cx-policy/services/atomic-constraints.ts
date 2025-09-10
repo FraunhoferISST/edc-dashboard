@@ -38,13 +38,13 @@ export class RightOperands {
   static DataExchangeGovernance(): RightOperand {
     return {
       name: 'DataExchangeGovernance',
-      const: 'DataExchangeGovernance:2.0',
+      const: 'DataExchangeGovernance:1.0',
       operandType: 'string',
       legalText: {
         permission:
           'Data Provider and Data Consumer agree to the Data Exchange Governance published by the Catena-X Automotive Network e.V. (Association) as basis for this Agreement concluded via the Registered Connector (RC). The Data Exchange Governance Version 1.0 can be found here: <a href="https://catenax-ev.github.io/docs/regulatory-framework/20000ft/data-exchange-governance">https://catenax-ev.github.io/docs/regulatory-framework/20000ft/data-exchange-governance</a> after CX-Saturn has been released. The subject matter of the Agreement concluded via the RC is the provision of the Data for a limited period of one (1) year (unless otherwise agreed in <a href="https://w3id.org/catenax/2025/9/policy/data-provisioning-end-date-constraint-schema.json">dataProvisioningEndDate</a> or <a href="https://w3id.org/catenax/2025/9/policy/data-provisioning-end-duration-days-constraint-schema.json">dataProvisioningEndDurationDays</a>) and granting a right to use the Data for a period of one (1) year (unless agreed otherwise in <a href="https://w3id.org/catenax/2025/9/policy/data-usage-end-date-constraint-schema.json">dataUsageEndDate</a> or <a href="https://w3id.org/catenax/2025/9/policy/data-usage-end-duration-days-constraint-schema.json">dataUsageEndDurationDays</a> or open-ended <a href="https://w3id.org/catenax/2025/9/policy/data-usage-end-definition-constraint-schema.json">DataUsageEndUnlimited</a>). The provision of the Data shall be effected via the API specified by the dataset attribute dct:type. The Agreement concluded via the RC covers only the exchange of Data effected on the basis of the API version (as specified in the dataset attribute base-URL), the Asset-Version (dataset attribute cx-common:version), and the Aspect Model Version as applicable at the time of concluding the Agreement. Unless agreed otherwise in <a href="https://w3id.org/catenax/2025/9/policy/version-changes-constraint-schema.json">VersionChanges</a>, the Agreement concluded via the RC must be renegotiated in the event of any change to at least one of these versions. Unless otherwise agreed between the Parties within the Agreement concluded via the RC (in accordance with <a href="https://w3id.org/catenax/2025/9/policy/usage-purpose-constraint-schema.json">UsagePurpose</a>), the Data Provider grants the Data Consumer a non-exclusive right, limited in time to the duration of this contract (in accordance with <a href="https://w3id.org/catenax/2025/9/policy/data-usage-end-date-constraint-schema.json">dataUsageEndDate</a> or <a href="https://w3id.org/catenax/2025/9/policy/data-usage-end-duration-days-constraint-schema.json">dataUsageEndDurationDays</a> or open-ended <a href="https://w3id.org/catenax/2025/9/policy/data-usage-end-definition-constraint-schema.json">DataUsageEndUnlimited</a>), to use the Data in accordance with the Contractual Usage Purposes (in accordance with <a href="https://w3id.org/catenax/2025/9/policy/usage-purpose-constraint-schema.json">Usage Purpose</a>).',
       },
-      value: 'DataExchangeGovernance:2.0',
+      value: 'DataExchangeGovernance:1.0',
     };
   }
 
@@ -626,123 +626,6 @@ export class RightOperands {
     };
   }
 
-  static ManagedLegalEntityRegionAll(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionAll',
-      const: 'cx.region.all:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC).",
-      },
-      value: 'cx.region.all:1',
-    };
-  }
-
-  static ManagedLegalEntityRegionEurope(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionEurope',
-      const: 'cx.region.europe:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC). The registered offices of such managed companies must be located in Europe.",
-      },
-      value: 'cx.region.europe:1',
-    };
-  }
-
-  static ManagedLegalEntityRegionNorthAmerica(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionNorthAmerica',
-      const: 'cx.region.northAmerica:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC). The registered offices of such managed companies must be located in North America.",
-      },
-      value: 'cx.region.northAmerica:1',
-    };
-  }
-
-  static ManagedLegalEntityRegionSouthAmerica(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionSouthAmerica',
-      const: 'cx.region.southAmerica:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC). The registered offices of such managed companies must be located in South America.",
-      },
-      value: 'cx.region.southAmerica:1',
-    };
-  }
-
-  static ManagedLegalEntityRegionAfrica(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionAfrica',
-      const: 'cx.region.africa:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC). The registered offices of such managed companies must be located in Africa.",
-      },
-      value: 'cx.region.africa:1',
-    };
-  }
-
-  static ManagedLegalEntityRegionAsia(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionAsia',
-      const: 'cx.region.asia:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC). The registered offices of such managed companies must be located in Asia.",
-      },
-      value: 'cx.region.asia:1',
-    };
-  }
-
-  static ManagedLegalEntityRegionOceania(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionOceania',
-      const: 'cx.region.oceania:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC). The registered offices of such managed companies must be located in Oceania.",
-      },
-      value: 'cx.region.oceania:1',
-    };
-  }
-
-  static ManagedLegalEntityRegionAntarctica(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityRegionAntarctica',
-      const: 'cx.region.antarctica:1',
-      operandType: 'string',
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use by those companies for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard 'CX-0074') ('Sublicensing'), provided that the Data Consumer ensures that such companies comply with the terms of the Agreement concluded via the Registered Connector (RC). The registered offices of such managed companies must be located in Antarctica.",
-      },
-      value: 'cx.region.antarctica:1',
-    };
-  }
-
-  static ManagedLegalEntityBpnl(): RightOperand {
-    return {
-      name: 'ManagedLegalEntityBpnl',
-      operandType: 'string',
-      pattern: /^BPNL[0-9A-Z]{12}$/,
-      legalText: {
-        permission:
-          "The Data Provider permits the Data Consumer to make the Data available for use to the companies specified herein ('Sublicensing'), for which the Data Consumer acts in an 'is managed by' relationship (within the meaning of the Catena-X Standard CX-0074), provided that the Data Consumer ensures that such managed companies comply with the terms of the Agreement concluded via the Registered Connector (RC).",
-      },
-      value: 'BPNL0000000004',
-    };
-  }
-
   static DataFrequencyOnce(): RightOperand {
     return {
       name: 'DataFrequencyOnce',
@@ -1231,27 +1114,6 @@ export class AtomicConstraints {
     return new AtomicConstraint('AffiliatesBpnl', ['isAnyOf'], [RightOperands.AffiliatesBpnl()]);
   }
 
-  static ManagedLegalEntityRegionConstraint(): AtomicConstraint {
-    return new AtomicConstraint(
-      'ManagedLegalEntityRegion',
-      ['isAnyOf'],
-      [
-        RightOperands.ManagedLegalEntityRegionAll(),
-        RightOperands.ManagedLegalEntityRegionEurope(),
-        RightOperands.ManagedLegalEntityRegionNorthAmerica(),
-        RightOperands.ManagedLegalEntityRegionSouthAmerica(),
-        RightOperands.ManagedLegalEntityRegionAfrica(),
-        RightOperands.ManagedLegalEntityRegionAsia(),
-        RightOperands.ManagedLegalEntityRegionOceania(),
-        RightOperands.ManagedLegalEntityRegionAntarctica(),
-      ],
-    );
-  }
-
-  static ManagedLegalEntityBpnlConstraint(): AtomicConstraint {
-    return new AtomicConstraint('ManagedLegalEntityBpnl', ['isAnyOf'], [RightOperands.ManagedLegalEntityBpnl()]);
-  }
-
   static DataFrequencyConstraint(): AtomicConstraint {
     return new AtomicConstraint(
       'DataFrequency',
@@ -1385,8 +1247,6 @@ export class RuleSets {
       AtomicConstraints.ContractReferenceConstraint(),
       AtomicConstraints.AffiliatesRegionConstraint(),
       AtomicConstraints.AffiliatesBpnlConstraint1(),
-      AtomicConstraints.ManagedLegalEntityRegionConstraint(),
-      AtomicConstraints.ManagedLegalEntityBpnlConstraint(),
       AtomicConstraints.DataFrequencyConstraint(),
       AtomicConstraints.VersionChangesConstraint(),
       AtomicConstraints.ContractTerminationConstraint(),
