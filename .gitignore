@@ -50,3 +50,4 @@ cypress/downloads/
 
 # Cypress cache
 .cypress_cache/
+.run/Validator.run.xml
