@@ -42,7 +42,7 @@
     @if (rightOperand) {
       <app-right-operand [rightOperand]="rightOperand" [parentFormGroup]="form"></app-right-operand>
     } @else if (rightOperands) {
-      @for (item of rightOperands; let i = $index; track item.name) {
+      @for (item of rightOperands; let i = $index; track item) {
         <app-right-operand
           [rightOperand]="item"
           [selectTypes]="getRightOperands()"

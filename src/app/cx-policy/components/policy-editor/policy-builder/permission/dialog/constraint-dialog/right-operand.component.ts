@@ -31,6 +31,13 @@ export class RightOperandComponent implements OnInit {
     this.updateFormGroup();
   }
 
+  onDelete(): void {
+    if (this.parentFormGroup.get(this.uuid)) {
+      this.parentFormGroup.removeControl(this.uuid);
+    }
+    this.deleted.emit(this.rightOperand);
+  }
+
   compare(a: RightOperand, b: RightOperand): boolean {
     return a && b && a.name === b.name;
   }

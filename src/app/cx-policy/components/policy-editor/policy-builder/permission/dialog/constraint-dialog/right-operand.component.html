@@ -64,7 +64,7 @@
     }
   </div>
   @if (deleteButton) {
-    <button type="button" class="ml-2 btn btn-sm btn-square btn-soft btn-error" (click)="deleted.emit(rightOperand)">
+    <button type="button" class="ml-2 btn btn-sm btn-square btn-soft btn-error" (click)="onDelete()">
       <span class="material-symbols-rounded">delete</span>
     </button>
   }
