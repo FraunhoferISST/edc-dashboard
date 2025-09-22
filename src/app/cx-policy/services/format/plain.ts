@@ -31,7 +31,11 @@ import {
 import { JsonLdFormatter } from '../format.service';
 import { PolicyService } from '../policy.service';
 
-const CONTEXTS = ['http://www.w3.org/ns/odrl.jsonld', 'https://w3id.org/catenax/2025/9/policy/context.jsonld'];
+// const CONTEXTS = ['http://www.w3.org/ns/odrl.jsonld', 'https://w3id.org/catenax/2025/9/policy/context.jsonld'];
+const CONTEXTS = [
+  'https://w3id.org/catenax/2025/9/policy/odrl.jsonld',
+  'https://w3id.org/catenax/2025/9/policy/context.jsonld',
+];
 const NESTED_CONTEXT = { '@vocab': 'https://w3id.org/edc/v0.0.1/ns/' };
 
 export const policyRequestTemplate = {
@@ -43,6 +47,7 @@ export const policyRequestTemplate = {
 
 const policyHeader = {
   '@type': 'Set',
+  '@context': {},
 };
 
 export const emptyPolicy = Object.assign(policyRequestTemplate, {
@@ -71,11 +76,11 @@ export class PlainFormatter implements JsonLdFormatter {
     const additionalNamespaces = this.policyService.namespacesFor(policyConfig);
     const additionalContexts = this.policyService.contextsFor(policyConfig);
 
-    const context = [...CONTEXTS, ...additionalContexts, Object.assign(NESTED_CONTEXT, additionalNamespaces)];
+    const context = [...CONTEXTS, ...additionalContexts];
 
     return Object.assign(emptyPolicy, {
-      '@context': context,
-      policy: { ...policyHeader, permission, obligation, prohibition },
+      '@context': Object.assign(NESTED_CONTEXT, additionalNamespaces),
+      policy: { ...policyHeader, '@context': context, permission, obligation, prohibition },
     });
   }
 
