@@ -16,6 +16,10 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *    Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V. - Catena-X Next Policy Builder
+ *
  ******************************************************************************/
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -44,7 +48,6 @@ import { JsonObject } from '@angular-devkit/core';
 @Component({
   selector: 'app-policy-editor',
   templateUrl: './policy-editor.component.html',
-  styleUrls: ['./policy-editor.component.css'],
   standalone: true,
   imports: [PolicyBuilderComponent, FormsModule, NgFor, AsyncPipe],
 })

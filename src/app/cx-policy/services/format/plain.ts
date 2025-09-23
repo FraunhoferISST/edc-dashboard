@@ -16,6 +16,10 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *    Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V. - Catena-X Next Policy Builder
+ *
  ******************************************************************************/
 
 /*eslint-disable @typescript-eslint/no-explicit-any*/
@@ -31,7 +35,6 @@ import {
 import { JsonLdFormatter } from '../format.service';
 import { PolicyService } from '../policy.service';
 
-// const CONTEXTS = ['http://www.w3.org/ns/odrl.jsonld', 'https://w3id.org/catenax/2025/9/policy/context.jsonld'];
 const CONTEXTS = [
   'https://w3id.org/catenax/2025/9/policy/odrl.jsonld',
   'https://w3id.org/catenax/2025/9/policy/context.jsonld',

@@ -16,6 +16,10 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *    Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V. - Catena-X Next Policy Builder
+ *
  ******************************************************************************/
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -28,7 +32,6 @@ import { RuleSets } from '../../../services/atomic-constraints';
 @Component({
   selector: 'app-policy-builder',
   templateUrl: 'policy-builder.component.html',
-  styleUrls: ['policy-builder.component.css'],
   standalone: true,
   imports: [NgIf, PermissionComponent, FormsModule],
 })

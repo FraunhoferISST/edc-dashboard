@@ -16,6 +16,10 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *    Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V. - Catena-X Next Policy Builder
+ *
  ******************************************************************************/
 
 export class Permission {
