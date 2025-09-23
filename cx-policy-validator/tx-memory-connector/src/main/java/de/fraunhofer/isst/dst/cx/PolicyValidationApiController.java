@@ -1,3 +1,18 @@
+/*
+ *  Copyright (c) 2025 Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V.
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *       Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V. - initial API and implementation
+ *
+ */
+
+
 package de.fraunhofer.isst.dst.cx;
 
 import jakarta.json.JsonObject;
@@ -11,7 +26,6 @@ import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.Poli
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.validator.spi.JsonObjectValidatorRegistry;
-import org.eclipse.edc.web.spi.configuration.ApiContext;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.eclipse.edc.web.spi.exception.ValidationFailureException;
 

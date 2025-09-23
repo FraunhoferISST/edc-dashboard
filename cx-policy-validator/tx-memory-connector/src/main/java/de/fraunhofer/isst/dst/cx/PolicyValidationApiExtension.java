@@ -1,6 +1,20 @@
+/*
+ *  Copyright (c) 2025 Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V.
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *       Fraunhofer-Gesellschaft zur Förderung der angewandten Forschung e.V. - initial API and implementation
+ *
+ */
+
+
 package de.fraunhofer.isst.dst.cx;
 
-import org.eclipse.edc.connector.controlplane.api.management.policy.transform.JsonObjectToPolicyDefinitionTransformer;
 import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.runtime.metamodel.annotation.Extension;
@@ -23,9 +37,9 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.eclipse.edc.api.management.ManagementApi.MANAGEMENT_SCOPE;
 import static org.eclipse.edc.spi.constants.CoreConstants.JSON_LD;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 
 @Extension(value = PolicyValidationApiExtension.NAME)
