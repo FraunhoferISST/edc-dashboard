@@ -37,7 +37,7 @@ import { PolicyCardComponent } from '../policy-card/policy-card.component';
   styleUrl: './policy-view.component.css',
 })
 export class PolicyViewComponent implements OnInit, OnDestroy {
-  policyService = inject(PolicyService);
+  private readonly policyService = inject(PolicyService);
   private readonly modalAndAlertService = inject(ModalAndAlertService);
   private readonly stateService = inject(DashboardStateService);
 
@@ -57,7 +57,7 @@ export class PolicyViewComponent implements OnInit, OnDestroy {
     this.fetchPolicies();
   }
 
-  async openDetails(policy: PolicyDefinition) {
+  openDetails(policy: PolicyDefinition) {
     this.modalAndAlertService.openModal(JsonldViewerComponent, { jsonLdObject: policy });
   }
 
@@ -87,7 +87,7 @@ export class PolicyViewComponent implements OnInit, OnDestroy {
     this.modalAndAlertService.openModal(PolicyCreateComponent, undefined, callbacks);
   }
 
-  async editPolicy(policyDefinition: PolicyDefinition) {
+  editPolicy(policyDefinition: PolicyDefinition) {
     const callbacks = {
       updated: () => {
         this.modalAndAlertService.closeModal();
@@ -124,7 +124,7 @@ export class PolicyViewComponent implements OnInit, OnDestroy {
             })
             .catch(error => {
               console.error(error);
-              const msg = `Deletion of asset '${policy.id}' failed`;
+              const msg = `Deletion of policy '${policy.id}' failed`;
               this.modalAndAlertService.showAlert(msg, undefined, 'error', 5);
             });
         },
