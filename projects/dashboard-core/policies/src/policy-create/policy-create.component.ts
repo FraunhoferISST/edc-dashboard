@@ -14,7 +14,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { PolicyService } from '../policy.service';
 import { AlertComponent } from '@eclipse-edc/dashboard-core';
 import { PolicyType } from '@think-it-labs/edc-connector-client/dist/src/entities/policy/policy';
@@ -37,6 +37,9 @@ import {
 })
 export class PolicyCreateComponent implements OnChanges {
   private readonly policyService = inject(PolicyService);
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected readonly Object = Object;
 
   @Input() policyDefinition?: PolicyDefinition;
 
@@ -52,6 +55,15 @@ export class PolicyCreateComponent implements OnChanges {
   prohibitionsJson = '';
   obligationsJson = '';
 
+  policyForm: FormGroup;
+
+  constructor() {
+    this.policyForm = this.formBuilder.group({
+      id: [''],
+      policyType: [''],
+    });
+  }
+
   async ngOnChanges() {
     if (this.policyDefinition) {
       const compactPolicy = await compact(this.policyDefinition.policy);
@@ -61,13 +73,14 @@ export class PolicyCreateComponent implements OnChanges {
       const typeSplit: string[] = compactPolicy['@type'].split('/');
       this.policyType = typeSplit[typeSplit.length - 1] as PolicyType;
       if (this.policyDefinition.policy.permissions.length > 0) {
-        this.permissionsJson = JSON.stringify(await compact(this.policyDefinition.policy.permissions), null, 2);
+        this.permissionsJson = JSON.stringify(await compact(this.policyDefinition.policy.permissions));
       }
       if (this.policyDefinition.policy.prohibitions.length > 0) {
-        this.prohibitionsJson = JSON.stringify(await compact(this.policyDefinition.policy.prohibitions), null, 2);
+        this.prohibitionsJson = JSON.stringify(await compact(this.policyDefinition.policy.prohibitions));
       }
+
       if (this.policyDefinition.policy.obligations.length > 0) {
-        this.obligationsJson = JSON.stringify(await compact(this.policyDefinition.policy.obligations), null, 2);
+        this.obligationsJson = JSON.stringify(await compact(this.policyDefinition.policy.obligations));
       }
     }
   }
@@ -115,14 +128,41 @@ export class PolicyCreateComponent implements OnChanges {
       '@type': this.policyType,
     };
 
-    if (this.permissionsJson) {
-      policyInput.permission = this.parseJsonField(this.permissionsJson, 'permissions');
+    // Individual JSON parsing with separate error handling
+    try {
+      if (this.permissionsJson && this.permissionsJson !== '') {
+        policyInput.permission = JSON.parse(this.permissionsJson);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        throw new Error(`Invalid JSON for permissions: ${err.message}`);
+      } else {
+        throw new Error('An unknown error occurred during permissions JSON parsing.');
+      }
     }
-    if (this.prohibitionsJson) {
-      policyInput.prohibition = this.parseJsonField(this.prohibitionsJson, 'prohibitions');
+
+    try {
+      if (this.prohibitionsJson && this.prohibitionsJson !== '') {
+        policyInput.prohibition = JSON.parse(this.prohibitionsJson);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        throw new Error(`Invalid JSON for prohibitions: ${err.message}`);
+      } else {
+        throw new Error('An unknown error occurred during prohibitions JSON parsing.');
+      }
     }
-    if (this.obligationsJson) {
-      policyInput.obligation = this.parseJsonField(this.obligationsJson, 'obligations');
+
+    try {
+      if (this.obligationsJson && this.obligationsJson !== '') {
+        policyInput.obligation = JSON.parse(this.obligationsJson);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        throw new Error(`Invalid JSON for obligations: ${err.message}`);
+      } else {
+        throw new Error('An unknown error occurred during obligations JSON parsing.');
+      }
     }
 
     let policy;
@@ -145,17 +185,5 @@ export class PolicyCreateComponent implements OnChanges {
     }
 
     return policyDefinitionInput;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private parseJsonField(json: string, fieldName: string): any {
-    try {
-      return JSON.parse(json);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        throw new Error(`Invalid JSON for ${fieldName}: ${err.message}`, { cause: err });
-      }
-      throw new Error(`An unknown error occurred during ${fieldName} JSON parsing.`, { cause: err });
-    }
   }
 }
