@@ -17,7 +17,7 @@ import { EdcClientService } from '@eclipse-edc/dashboard-core';
 import { IdResponse, PolicyDefinition, PolicyDefinitionInput } from '@think-it-labs/edc-connector-client';
 
 /**
- * Service to manage and retrieve assets.
+ * Service to manage and retrieve policy definitions.
  */
 @Injectable({
   providedIn: 'root',
@@ -26,8 +26,8 @@ export class PolicyService {
   private readonly edc = inject(EdcClientService);
 
   /**
-   * Retrieves all assets from the management API.
-   * @returns A promise that resolves to an array of assets.
+   * Retrieves all policy definitions from the management API.
+   * @returns A promise that resolves to an array of policy definitions.
    */
   public async getAllPolicies(): Promise<PolicyDefinition[]> {
     return (await this.edc.getClient()).management.policyDefinitions.queryAll();

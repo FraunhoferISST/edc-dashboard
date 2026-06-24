@@ -3,7 +3,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
       "@eclipse-edc/dashboard-core": ["./dist/@eclipse-edc/dashboard-core"],
       "@eclipse-edc/dashboard-core/*": ["./dist/@eclipse-edc/dashboard-core/*"]
